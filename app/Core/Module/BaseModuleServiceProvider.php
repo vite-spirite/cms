@@ -19,6 +19,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerMigrations();
         $this->registerCommands();
+        $this->registerSchedule();
     }
 
     protected function registerRoutes(): void
@@ -75,5 +76,22 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         }
 
         $this->commands($commands);
+    }
+
+    protected function registerSchedule(): void
+    {
+        if (!$this->app->runningInConsole()) {
+            return;
+        }
+
+        $schedulePath = $this->getModulePath() . '/../Console/schedule.php';
+
+        if (!File::exists($schedulePath)) {
+            return;
+        }
+
+        $this->booted(function () use ($schedulePath) {
+            require $schedulePath;
+        });
     }
 }
