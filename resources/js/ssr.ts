@@ -20,7 +20,26 @@ createServer(
 );
 
 function resolvePage(name: string) {
-    const pages = import.meta.glob<DefineComponent>('./pages/**/*.vue');
+    if (name.includes('::')) {
+        const [namespace, path] = name.split('::');
 
-    return resolvePageComponent<DefineComponent>(`./pages/${name}.vue`, pages);
+        const imports = import.meta.glob<DefineComponent>([
+            '../../app/Core/*/Resources/js/Pages/**/*.vue',
+            '../../app/Modules/*/Resources/js/Pages/**/*.vue',
+        ]);
+
+        const coreComponentPath = `../../app/Core/${namespace}/Resources/js/Pages/${path}.vue`;
+
+        if (Object.keys(imports).includes(coreComponentPath)) {
+            return resolvePageComponent(coreComponentPath, imports);
+        } else {
+            const moduleComponentPath = `../../app/Modules/${namespace}/Resources/js/Pages/${path}.vue`;
+
+            if (Object.keys(imports).includes(moduleComponentPath)) {
+                return resolvePageComponent(moduleComponentPath, imports);
+            }
+        }
+    }
+
+    return resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue'));
 }
