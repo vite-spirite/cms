@@ -1,0 +1,8 @@
+{
+    "name": "module",
+    "display_name": "Module manager",
+    "description": "Système de gestion des modules",
+    "version": "1.0.0",
+    "type": "core",
+    "provider": "App\\Core\\Module\\Providers\\ModuleServiceProvider"
+}

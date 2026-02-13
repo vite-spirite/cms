@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Core\Module\ModuleManager;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ModuleManager::class, function ($app) {
+            return new ModuleManager($app);
+        });
     }
 
     /**
@@ -24,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        $moduleManager = $this->app->make(ModuleManager::class);
+        $moduleManager->discovers();
+        $moduleManager->loadModules('core');
     }
 
     /**
