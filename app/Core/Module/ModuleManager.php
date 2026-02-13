@@ -4,6 +4,7 @@ namespace App\Core\Module;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleManager extends ServiceProvider
@@ -16,29 +17,31 @@ class ModuleManager extends ServiceProvider
     {
         $this->modules = [];
 
-        $coreModules = $this->discoversModules('Core');
-        $modules = $this->discoversModules('Modules');
-
-        $this->modules = array_merge($coreModules, $modules);
+        $this->discoversModules('Core');
+        $this->discoversModules('Modules');
     }
 
-    protected function discoversModules(string $appPath): array
+    protected function discoversModules(string $appPath): void
     {
-        $modules = [];
         $path = app_path($appPath);
         $directories = File::directories($path);
 
         foreach ($directories as $directory) {
-            $jsonPath = $directory.'/module.json';
+            $jsonPath = $directory . '/module.json';
+            
             if (File::exists($jsonPath)) {
                 $data = json_decode(File::get($jsonPath), true);
                 if ($data && isset($data['name'])) {
-                    $modules[$data['name']] = $data;
+
+                    if (Arr::has($this->modules, $data['name'])) {
+                        Log::error("Module '{$data['name']}' already exists.");
+                        continue;
+                    }
+
+                    $this->modules[$data['name']] = $data;
                 }
             }
         }
-
-        return $modules;
     }
 
     public function loadModules(string $type)
@@ -55,7 +58,7 @@ class ModuleManager extends ServiceProvider
         $moduleName = $module['name'];
         $moduleProvider = $module['provider'];
 
-        if (! $moduleName || ! class_exists($moduleProvider)) {
+        if (!$moduleName || !class_exists($moduleProvider)) {
             return;
         }
 
