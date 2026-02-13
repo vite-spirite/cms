@@ -51,7 +51,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
             return;
         }
 
-        $commandPath = $this->getModulePath() . '/../Commands';
+        $commandPath = $this->getModulePath() . '/../Console/Commands';
 
         if (!File::isDirectory($commandPath)) {
             return;
@@ -68,8 +68,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
             $namespace = $reflection->getNamespaceName();
             $moduleNamespace = preg_replace('/\\\\Providers$/', '', $namespace);
 
-            $commandClass = $moduleNamespace . '\Commands' . $relativePath;
-
+            $commandClass = $moduleNamespace . '\Console\Commands' . $relativePath;
             if (class_exists($commandClass)) {
                 $commands[] = $commandClass;
             }
