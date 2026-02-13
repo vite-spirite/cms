@@ -5,6 +5,7 @@ import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { readdirSync, statSync } from 'node:fs';
+import ui from '@nuxt/ui/vite';
 
 function getModulesAliases() {
     const coreModulePath = resolve(__dirname, 'app/Core');
@@ -60,6 +61,9 @@ export default defineConfig({
         }),
         wayfinder({
             formVariants: true,
+        }),
+        ui({
+            router: 'inertia',
         }),
     ],
     resolve: {
