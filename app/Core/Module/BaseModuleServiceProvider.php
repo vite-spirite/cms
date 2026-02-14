@@ -8,14 +8,29 @@ use ReflectionClass;
 
 abstract class BaseModuleServiceProvider extends ServiceProvider
 {
+    protected static $registered = [];
+    protected static $booted = [];
     protected string $name = 'CoreModule';
-
     protected array $permissions = [];
-
     protected array $navigations = [];
+
+    public function register()
+    {
+        if (in_array(static::class, self::$registered)) {
+            return;
+        }
+
+        self::$registered[] = static::class;
+    }
 
     public function boot(): void
     {
+        if (in_array(static::class, self::$booted)) {
+            return;
+        }
+
+        self::$booted[] = static::class;
+        
         $this->registerRoutes();
         $this->registerMigrations();
         $this->registerCommands();
