@@ -20,6 +20,8 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $this->registerMigrations();
         $this->registerCommands();
         $this->registerSchedule();
+
+        $this->registerConfig();
     }
 
     protected function registerRoutes(): void
@@ -93,5 +95,21 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $this->booted(function () use ($schedulePath) {
             require $schedulePath;
         });
+    }
+
+    protected function registerConfig(): void
+    {
+        $directoryPath = $this->getModulePath() . '/../Config';
+
+        if (!File::isDirectory($directoryPath)) {
+            return;
+        }
+
+        $files = File::allFiles($directoryPath);
+        foreach ($files as $file) {
+            $path = $file->getPath() . '/' . $file->getFilename();
+            $this->mergeConfigFrom($path, $file->getFilename());
+        }
+
     }
 }
