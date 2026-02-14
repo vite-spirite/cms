@@ -22,6 +22,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $this->registerSchedule();
 
         $this->registerConfig();
+        $this->registerTranslations();
     }
 
     protected function registerRoutes(): void
@@ -110,6 +111,15 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
             $path = $file->getPath() . '/' . $file->getFilename();
             $this->mergeConfigFrom($path, $file->getFilename());
         }
+    }
 
+    protected function registerTranslations(): void
+    {
+        $directoryPath = $this->getModulePath() . '/../Resources/lang';
+        if (!File::isDirectory($directoryPath)) {
+            return;
+        }
+
+        $this->loadTranslationsFrom($directoryPath, $this->name);
     }
 }
