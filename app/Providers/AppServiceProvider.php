@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $moduleManager = $this->app->make(ModuleManager::class);
         $moduleManager->discovers();
         $moduleManager->loadModules('core');
+
     }
 
     /**

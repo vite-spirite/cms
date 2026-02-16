@@ -1,0 +1,8 @@
+{
+    "name": "navigation",
+    "display_name": "Dashboard navigation",
+    "description": "Manage dashboard sidebar",
+    "version": "1.0.0",
+    "type": "core",
+    "provider": "App\\Core\\Navigation\\Providers\\NavigationServiceProvider"
+}

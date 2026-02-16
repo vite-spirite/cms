@@ -2,19 +2,20 @@
 
 namespace App\Core\Module;
 
+use App\Core\Navigation\Service\NavigationManager;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use ReflectionClass;
 
 abstract class BaseModuleServiceProvider extends ServiceProvider
 {
-    protected static $registered = [];
-    protected static $booted = [];
+    protected static array $registered = [];
+    protected static array $booted = [];
     protected string $name = 'CoreModule';
     protected array $permissions = [];
-    protected array $navigations = [];
 
-    public function register()
+    public function register(): void
     {
         if (in_array(static::class, self::$registered)) {
             return;
@@ -30,7 +31,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         }
 
         self::$booted[] = static::class;
-        
+
         $this->registerRoutes();
         $this->registerMigrations();
         $this->registerCommands();
@@ -38,6 +39,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
 
         $this->registerConfig();
         $this->registerTranslations();
+        $this->registerNavigations();
     }
 
     protected function registerRoutes(): void
@@ -136,5 +138,22 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom($directoryPath, $this->name);
+    }
+
+    protected function registerNavigations(): void
+    {
+        $this->booted(function () {
+            if (!$this->app->bound(NavigationManager::class)) {
+                Log::warning("NavigationManager is not available in {$this->name}.");
+            }
+
+            $navigationManager = $this->app->make(NavigationManager::class);
+            $navigationManager->registerMany($this->getNavigations());
+        });
+    }
+
+    public function getNavigations(): array
+    {
+        return [];
     }
 }
