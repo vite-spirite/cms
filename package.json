@@ -3,12 +3,13 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "build:ssr": "vite build && vite build --ssr",
-        "dev": "vite",
+        "build": "npm run generate:tsconfig && vite build",
+        "build:ssr": "npm run generate:tsconfig && vite build && vite build --ssr",
+        "dev": "npm run generate:tsconfig && vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix"
+        "lint": "eslint . --fix",
+        "generate:tsconfig": "node generate-tsconfig.js"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",

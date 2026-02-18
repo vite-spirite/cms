@@ -2,6 +2,8 @@
 
 namespace App\Core\Navigation\Data;
 
+use Illuminate\Support\Facades\URL;
+
 class NavigationItem
 {
     public function __construct(
@@ -39,7 +41,7 @@ class NavigationItem
         return array_filter([
             'label' => $this->label,
             'icon' => $this->icon,
-            'route' => $this->route,
+            'to' => $this->route ? URL::route($this->route, [], false) : null,
             'badge' => $badge,
             'disabled' => $this->disabled,
             'children' => $this->children ? array_map(fn($child) => $child->toArray(), $this->children) : null,
