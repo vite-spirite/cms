@@ -12,23 +12,16 @@
         </template>
 
         <template #footer="{ collapsed }">
-            <ExtensionPoint extension-props="" name="navigation.sidebar.footer" />
-            <!--            <UButton :block="collapsed" class="w-full" color="error" icon="i-lucide-log-out" label="Logout" variant="ghost" @click="logout" />-->
+            <ExtensionPoint :extension-props="{ collapsed }" name="navigation.sidebar.footer" />
         </template>
     </UDashboardSidebar>
 </template>
 
 <script lang="ts" setup>
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-import LogoutController from '@/actions/App/Core/Auth/Controllers/LogoutController';
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
 
 const page = usePage();
 const navigation = computed(() => page.props.navigation);
-
-const logout = () => {
-    router.post(LogoutController.url());
-};
 </script>
