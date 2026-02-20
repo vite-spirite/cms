@@ -1,0 +1,8 @@
+{
+    "name": "Permissions",
+    "display_name": "Permissions management",
+    "description": "Manage permissions",
+    "version": "1.0.0",
+    "type": "core",
+    "provider": "App\\Core\\Permissions\\Providers\\PermissionServiceProvider"
+}

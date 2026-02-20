@@ -3,6 +3,7 @@
 namespace App\Core\Module;
 
 use App\Core\Navigation\Service\NavigationManager;
+use App\Core\Permissions\Service\PermissionRegistry;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
@@ -40,6 +41,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerTranslations();
         $this->registerNavigations();
+        $this->registerPermissions();
     }
 
     protected function registerRoutes(): void
@@ -155,5 +157,22 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
     public function getNavigations(): array
     {
         return [];
+    }
+
+    protected function registerPermissions(): void
+    {
+        $this->booted(function () {
+            if (empty($this->permissions)) {
+                return;
+            }
+
+            if (!$this->app->bound(PermissionRegistry::class)) {
+                return;
+            }
+
+            $permissions = $this->app->make(PermissionRegistry::class);
+            $permissions->registerMany($this->name, $this->permissions);
+        });
+
     }
 }
