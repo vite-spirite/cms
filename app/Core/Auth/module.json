@@ -1,0 +1,8 @@
+{
+    "name": "auth",
+    "display_name": "Authentification",
+    "description": "Système d'authentification et gestion des utilisateurs",
+    "version": "1.0.0",
+    "type": "core",
+    "provider": "App\\Core\\Auth\\Providers\\AuthServiceProvider"
+}
