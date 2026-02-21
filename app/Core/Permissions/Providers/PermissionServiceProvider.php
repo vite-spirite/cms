@@ -2,6 +2,8 @@
 
 namespace App\Core\Permissions\Providers;
 
+use App\Core\Auth\Events\UserCreated;
+use App\Core\Auth\Events\UserEdited;
 use App\Core\Auth\Models\User;
 use App\Core\Permissions\Models\Permission;
 use App\Core\Permissions\Models\Role;
@@ -31,6 +33,14 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
             'name' => 'Delete roles',
             'description' => 'Delete roles ability',
         ],
+        'role_assign' => [
+            'name' => 'Assign roles',
+            'description' => 'Assign roles to users',
+        ],
+        'permission_assign' => [
+            'name' => 'Assign permissions',
+            'description' => 'Assign permissions to users',
+        ]
     ];
 
     public function getNavigations(): array
@@ -73,6 +83,33 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
         $this->extendUserModel();
         $this->registerGates();
         $this->shareInertia();
+
+        \Event::listen(UserCreated::class, function (UserCreated $event) {
+            $user = \auth()->user();
+            if ($user->can('role_assign')) {
+                $event->user->roles()->sync($event->payload['roles']);
+            }
+
+            if ($user->can('permission_assign')) {
+                $this->syncDatabasePermissions();
+                $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
+                $event->user->permissions()->sync($ids);
+            }
+        });
+
+        \Event::listen(UserEdited::class, function (UserEdited $event) {
+            $user = \auth()->user();
+            
+            if ($user->can('role_assign')) {
+                $event->user->roles()->sync($event->payload['roles']);
+            }
+
+            if ($user->can('permission_assign')) {
+                $this->syncDatabasePermissions();
+                $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
+                $event->user->permissions()->sync($ids);
+            }
+        });
     }
 
     protected function extendUserModel(): void
@@ -149,5 +186,11 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
                 'owner' => fn() => Auth::check() ? Auth::user()->isOwner() : false,
             ]
         ]);
+    }
+
+    private function syncDatabasePermissions(): void
+    {
+        $permissionRegistry = $this->app->make(PermissionRegistry::class);
+        $permissionRegistry->sync();
     }
 }
