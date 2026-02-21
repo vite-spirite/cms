@@ -46,10 +46,16 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
 
     protected function registerRoutes(): void
     {
-        $path = $this->getModulePath() . '/../Routes/web.php';
 
-        if (File::exists($path)) {
-            $this->loadRoutesFrom($path);
+        $webPath = $this->getModulePath() . '/../Routes/web.php';
+        $apiPath = $this->getModulePath() . '/../Routes/api.php';
+
+        if (File::exists($webPath)) {
+            \Route::middleware('web')->group($webPath);
+        }
+
+        if (File::exists($apiPath)) {
+            \Route::middleware(['web', 'auth'])->prefix('api')->name('api.')->group($apiPath);
         }
     }
 

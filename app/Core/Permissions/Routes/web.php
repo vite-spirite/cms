@@ -1,6 +1,6 @@
 <?php
 
-Route::prefix('admin/permissions')->middleware(['web', 'auth'])->group(function () {
+Route::prefix('admin/permissions')->middleware(['auth'])->group(function () {
     Route::get('/roles/list', \App\Core\Permissions\Controllers\RoleListController::class)->middleware('can:role_read')->name('permissions.roles.list');
     Route::get('/roles/create', \App\Core\Permissions\Controllers\RoleCreateController::class)->middleware('can:role_create')->name('permissions.roles.create');
     Route::post('/roles/create', \App\Core\Permissions\Controllers\RoleCreateRequestController::class)->middleware('can:role_create')->name('permissions.roles.create.request');
