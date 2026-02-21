@@ -1,5 +1,5 @@
 {
-    "name": "auth",
+    "name": "Auth",
     "display_name": "Authentification",
     "description": "Système d'authentification et gestion des utilisateurs",
     "version": "1.0.0",

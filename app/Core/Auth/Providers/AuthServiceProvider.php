@@ -4,6 +4,7 @@ namespace App\Core\Auth\Providers;
 
 use App\Core\Auth\Models\User;
 use App\Core\Module\BaseModuleServiceProvider;
+use App\Core\Module\ModuleHelper;
 use App\Core\Permissions\Events\RoleCreated;
 use App\Core\Permissions\Events\RoleUpdated;
 use Inertia\Inertia;
@@ -53,16 +54,18 @@ class AuthServiceProvider extends BaseModuleServiceProvider
             'users' => Inertia::optional(fn() => User::all()),
         ]);
 
-        \Event::listen(RoleCreated::class, function (RoleCreated $event) {
-            if (auth()->user()->can('role_assign')) {
-                $event->role->users()->sync($event->payload['users']);
-            }
-        });
+        ModuleHelper::when('Permissions', function () {
+            \Event::listen(RoleCreated::class, function (RoleCreated $event) {
+                if (auth()->user()->can('role_assign')) {
+                    $event->role->users()->sync($event->payload['users']);
+                }
+            });
 
-        \Event::listen(RoleUpdated::class, function (RoleUpdated $event) {
-            if (auth()->user()->can('role_assign')) {
-                $event->role->users()->sync($event->payload['users']);
-            }
+            \Event::listen(RoleUpdated::class, function (RoleUpdated $event) {
+                if (auth()->user()->can('role_assign')) {
+                    $event->role->users()->sync($event->payload['users']);
+                }
+            });
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\Core\Permissions\Providers;
 use App\Core\Auth\Events\UserCreated;
 use App\Core\Auth\Events\UserEdited;
 use App\Core\Auth\Models\User;
+use App\Core\Module\ModuleHelper;
 use App\Core\Permissions\Models\Permission;
 use App\Core\Permissions\Models\Role;
 use App\Core\Permissions\Service\PermissionRegistry;
@@ -83,33 +84,9 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
         $this->extendUserModel();
         $this->registerGates();
         $this->shareInertia();
+        $this->listenUserEvents();
 
-        \Event::listen(UserCreated::class, function (UserCreated $event) {
-            $user = \auth()->user();
-            if ($user->can('role_assign')) {
-                $event->user->roles()->sync($event->payload['roles']);
-            }
 
-            if ($user->can('permission_assign')) {
-                $this->syncDatabasePermissions();
-                $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
-                $event->user->permissions()->sync($ids);
-            }
-        });
-
-        \Event::listen(UserEdited::class, function (UserEdited $event) {
-            $user = \auth()->user();
-            
-            if ($user->can('role_assign')) {
-                $event->user->roles()->sync($event->payload['roles']);
-            }
-
-            if ($user->can('permission_assign')) {
-                $this->syncDatabasePermissions();
-                $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
-                $event->user->permissions()->sync($ids);
-            }
-        });
     }
 
     protected function extendUserModel(): void
@@ -186,6 +163,38 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
                 'owner' => fn() => Auth::check() ? Auth::user()->isOwner() : false,
             ]
         ]);
+    }
+
+    private function listenUserEvents(): void
+    {
+        ModuleHelper::when('Auth', function () {
+            \Event::listen(UserCreated::class, function (UserCreated $event) {
+                $user = \auth()->user();
+                if ($user->can('role_assign')) {
+                    $event->user->roles()->sync($event->payload['roles']);
+                }
+
+                if ($user->can('permission_assign')) {
+                    $this->syncDatabasePermissions();
+                    $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
+                    $event->user->permissions()->sync($ids);
+                }
+            });
+
+            \Event::listen(UserEdited::class, function (UserEdited $event) {
+                $user = \auth()->user();
+
+                if ($user->can('role_assign')) {
+                    $event->user->roles()->sync($event->payload['roles']);
+                }
+
+                if ($user->can('permission_assign')) {
+                    $this->syncDatabasePermissions();
+                    $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
+                    $event->user->permissions()->sync($ids);
+                }
+            });
+        });
     }
 
     private function syncDatabasePermissions(): void
