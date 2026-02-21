@@ -28,7 +28,7 @@ class ModuleManager extends ServiceProvider
 
         foreach ($directories as $directory) {
             $jsonPath = $directory . '/module.json';
-            
+
             if (File::exists($jsonPath)) {
                 $data = json_decode(File::get($jsonPath), true);
                 if ($data && isset($data['name'])) {
@@ -68,5 +68,10 @@ class ModuleManager extends ServiceProvider
 
         $this->app->register($moduleProvider);
         $this->activeModules[] = $moduleName;
+    }
+
+    public function getActiveModules(): array
+    {
+        return $this->activeModules;
     }
 }
