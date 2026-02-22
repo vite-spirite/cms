@@ -35,9 +35,12 @@ watch(error, (val) => {
 
 <template>
     <UApp>
-        <UDashboardGroup>
+        <UDashboardGroup id="dashboard">
             <ExtensionPoint name="layout.dashboard.left" />
             <slot />
+            <ExtensionPoint name="layout.dashboard.right" />
         </UDashboardGroup>
+
+        <ExtensionPoint name="layout.dashboard.bottom" />
     </UApp>
 </template>

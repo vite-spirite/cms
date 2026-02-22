@@ -1,0 +1,8 @@
+{
+    "name": "Logger",
+    "display_name": "Logging service",
+    "description": "Logging",
+    "version": "1.0.0",
+    "type": "module",
+    "provider": "App\\Modules\\Logger\\Providers\\LoggerServiceProvider"
+}
