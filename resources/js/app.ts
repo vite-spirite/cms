@@ -5,9 +5,9 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import '../css/app.css';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+import { ZiggyVue } from 'ziggy-js';
 
-import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts'], { eager: true });
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -36,10 +36,18 @@ createInertiaApp({
         return resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue'));
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ui)
-            .mount(el);
+        const activeModules = (props.initialPage.props.activeModules as string[]) ?? [];
+        const allExtensions = import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts']);
+
+        const activeExtensions = Object.entries(allExtensions).filter(([path]) => activeModules.some((module) => path.includes(`/${module}/`)));
+
+        Promise.all(Object.values(activeExtensions).map(([, ext]) => ext())).then(() => {
+            createApp({ render: () => h(App, props) })
+                .use(plugin)
+                .use(ui)
+                .use(ZiggyVue)
+                .mount(el);
+        });
     },
     progress: {
         color: '#4B5563',

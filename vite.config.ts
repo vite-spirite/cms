@@ -61,6 +61,7 @@ export default defineConfig({
         }),
         wayfinder({
             formVariants: true,
+            patterns: ['app/Core/**/Routes/*.php', 'app/Modules/**/Routes/*.php'],
         }),
         ui({
             router: 'inertia',
@@ -68,6 +69,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            'ziggy-js': resolve('vendor/tightenco/ziggy'),
             '@': resolve(__dirname, 'resources/js'),
             ...getModulesAliases(),
         },
@@ -79,6 +81,7 @@ export default defineConfig({
                 resolve(__dirname, 'app/Core'),
                 resolve(__dirname, 'app/Modules'),
                 resolve(__dirname, 'node_modules'),
+                resolve(__dirname, 'vendor/tightenco'),
             ],
         },
     },

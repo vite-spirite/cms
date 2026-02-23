@@ -1,22 +1,39 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import createServer from '@inertiajs/vue3/server';
+import ExtensionRegistry from '@modules/Module/ExtensionRegistry';
+import ui from '@nuxt/ui/vue-plugin';
+
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+import { ZiggyVue } from 'ziggy-js';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts'], { eager: true });
+const allExtensions = import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts']);
 
 createServer(
-    (page) =>
-        createInertiaApp({
-            page,
-            render: renderToString,
-            title: (title) => (title ? `${title} - ${appName}` : appName),
-            resolve: resolvePage,
-            setup: ({ App, props, plugin }) => createSSRApp({ render: () => h(App, props) }).use(plugin),
-        }),
+    (page) => {
+        const activeModules = (page.props.activeModules as string[]) ?? [];
+
+        ExtensionRegistry.reset();
+
+        const activeExtensions = Object.entries(allExtensions).filter(([path]) => activeModules.some((module) => path.includes(`/${module}/`)));
+
+        return Promise.all(activeExtensions.map(([, ext]) => ext())).then(() =>
+            createInertiaApp({
+                page,
+                render: renderToString,
+                title: (title) => (title ? `${title} - ${appName}` : appName),
+                resolve: resolvePage,
+                setup: ({ App, props, plugin }) =>
+                    createSSRApp({ render: () => h(App, props) })
+                        .use(plugin)
+                        .use(ui)
+                        .use(ZiggyVue),
+            }),
+        );
+    },
     { cluster: true },
 );
 

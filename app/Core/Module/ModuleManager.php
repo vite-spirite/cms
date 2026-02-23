@@ -2,6 +2,7 @@
 
 namespace App\Core\Module;
 
+use App\Core\Module\Models\Module;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,11 @@ class ModuleManager extends ServiceProvider
     protected array $modules = [];
 
     protected array $activeModules = [];
+
+    public function getActiveModules(): array
+    {
+        return $this->activeModules;
+    }
 
     public function discovers(): void
     {
@@ -70,8 +76,12 @@ class ModuleManager extends ServiceProvider
         $this->activeModules[] = $moduleName;
     }
 
-    public function getActiveModules(): array
+    public function loadStoredModules(): void
     {
-        return $this->activeModules;
+        $moduleList = Module::orderBy('id', 'ASC')->where('loaded', true)->get();
+        foreach ($moduleList as $dbModule) {
+            $module = $this->modules[$dbModule->name];
+            $this->registerProvider($module);
+        }
     }
 }

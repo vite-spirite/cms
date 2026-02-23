@@ -1,6 +1,6 @@
 import { Component } from 'vue';
 
-const registry: Record<string, Component[]> = {};
+let registry: Record<string, Component[]> = {};
 
 export default {
     register(pointName: string, component: Component) {
@@ -12,5 +12,8 @@ export default {
     },
     resolve(pointName: string) {
         return registry[pointName] || [];
+    },
+    reset() {
+        registry = {};
     },
 };
