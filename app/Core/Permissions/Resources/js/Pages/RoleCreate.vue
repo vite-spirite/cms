@@ -53,8 +53,8 @@ import { computed } from 'vue';
 import Layout from '@/Layout/Dashboard.vue';
 import type { Permission } from '../types/role';
 import type { CheckboxGroupItem } from '@nuxt/ui';
-import RoleCreateRequestController from '@/actions/App/Core/Permissions/Controllers/RoleCreateRequestController';
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout });
 
@@ -69,7 +69,7 @@ const form = useForm<{ name: string; permissions: string[]; extensions: Record<s
 });
 
 const onSubmit = () => {
-    form.post(RoleCreateRequestController.url());
+    form.post(route('permissions.roles.create.request'));
 };
 
 const formatItemsPermissions = (permissions: Permission[]): CheckboxGroupItem[] => {

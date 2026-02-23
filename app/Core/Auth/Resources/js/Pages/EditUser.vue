@@ -58,8 +58,8 @@ import type { User } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
 
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
-import EditUserRequestController from '@/actions/App/Core/Auth/Controllers/EditUserRequestController';
 import Layout from '@/Layout/Dashboard.vue';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout });
 
@@ -79,6 +79,6 @@ const form = useForm({
 });
 
 const onSubmit = () => {
-    form.put(EditUserRequestController.url());
+    form.put(route('admin.users.edit.request'));
 };
 </script>

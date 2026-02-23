@@ -11,7 +11,7 @@
         <template #body>
             <UPage class="container mx-auto grid gap-6">
                 <div v-if="hasRoleCreate" class="text-right">
-                    <UButton :to="RoleCreateController.url()" variant="soft">Create new role</UButton>
+                    <UButton :to="route('permissions.roles.create')" variant="soft">Create new role</UButton>
                 </div>
 
                 <UTable :columns="columns" :data="data" class="flex-1" />
@@ -24,12 +24,9 @@
 import Layout from '@/Layout/Dashboard.vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, h, ref, resolveComponent, type VNode } from 'vue';
+import { route } from 'ziggy-js';
 import type { TableColumn } from '@nuxt/ui';
 import type { Role as RoleType } from '../types/role';
-
-import RoleCreateController from '@/actions/App/Core/Permissions/Controllers/RoleCreateController';
-import RoleDeleteController from '@/actions/App/Core/Permissions/Controllers/RoleDeleteController';
-import RoleUpdateController from '@/actions/App/Core/Permissions/Controllers/RoleUpdateController';
 
 type Role = {
     id: number;
@@ -86,7 +83,7 @@ const columns: TableColumn<Role>[] = [
                     variant: 'soft',
                     icon: 'i-lucide-trash',
                     onClick: () =>
-                        router.delete(RoleDeleteController.delete({ id: row.original.id }), { preserveState: false, preserveScroll: true }),
+                        router.delete(route('permissions.roles.delete', { id: row.original.id }), { preserveState: false, preserveScroll: true }),
                 });
 
                 forUserOptions.push(node);
@@ -97,7 +94,7 @@ const columns: TableColumn<Role>[] = [
                     color: 'info',
                     variant: 'soft',
                     icon: 'i-lucide-pen',
-                    onClick: () => router.get(RoleUpdateController.url({ role: row.original.id })),
+                    onClick: () => router.get(route('permissions.roles.edit', { role: row.original.id })),
                 });
 
                 forUserOptions.push(node);

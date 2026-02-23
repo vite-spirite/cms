@@ -4,11 +4,11 @@
 
 <script lang="ts" setup>
 import { router } from '@inertiajs/vue3';
-import LogoutController from '@/actions/App/Core/Auth/Controllers/LogoutController';
+import { route } from 'ziggy-js';
 
 defineProps<{ collapsed: boolean }>();
 
 const logout = () => {
-    router.post(LogoutController.url());
+    router.post(route('admin.logout'));
 };
 </script>

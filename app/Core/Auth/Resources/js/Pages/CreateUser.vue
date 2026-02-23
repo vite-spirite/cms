@@ -56,7 +56,7 @@
 import { useForm, usePage } from '@inertiajs/vue3';
 import Layout from '@/Layout/Dashboard.vue';
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
-import CreateUserRequestController from '@/actions/App/Core/Auth/Controllers/CreateUserRequestController';
+import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout });
 
@@ -74,6 +74,6 @@ const form = useForm({
 });
 
 const onSubmit = () => {
-    form.post(CreateUserRequestController.url());
+    form.post(route('admin.users.create.request'));
 };
 </script>

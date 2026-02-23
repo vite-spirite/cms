@@ -50,11 +50,11 @@
 <script lang="ts" setup>
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { route } from 'ziggy-js';
 import Layout from '@/Layout/Dashboard.vue';
 import type { Permission } from '../types/role';
 import type { CheckboxGroupItem } from '@nuxt/ui';
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
-import RoleUpdateRequestController from '@/actions/App/Core/Permissions/Controllers/RoleUpdateRequestController';
 import { User } from '@/types';
 
 defineOptions({ layout: Layout });
@@ -73,7 +73,7 @@ const form = useForm<{ id: number; name: string; permissions: string[]; extensio
 });
 
 const onSubmit = () => {
-    form.put(RoleUpdateRequestController.url({ role: baseRole.value.id }));
+    form.put(route('permissions.roles.edit.request', { role: baseRole.value.id }));
 };
 
 const formatItemsPermissions = (permissions: Permission[]): CheckboxGroupItem[] => {

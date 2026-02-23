@@ -12,7 +12,7 @@
 import z from 'zod';
 import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui';
 import { useForm } from '@inertiajs/vue3';
-import LoginRequestController from '@/actions/App/Core/Auth/Controllers/LoginRequestController';
+import { route } from 'ziggy-js';
 
 const form = useForm({
     email: '',
@@ -55,7 +55,7 @@ const onSubmit = (event: FormSubmitEvent<Schema>) => {
     form.password = event.data.password;
     form.remember = event.data.remember ?? false;
 
-    form.post(LoginRequestController.url());
+    form.post(route('admin.login.request'));
 };
 </script>
 

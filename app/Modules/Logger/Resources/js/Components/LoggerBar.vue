@@ -35,8 +35,7 @@ import { useApi } from '@modules/Module/Composables/useApi';
 import { useGate } from '@modules/Module/Composables/useGate';
 import { format } from 'date-fns';
 import { vHighlight } from '../Directives/highlightjs';
-
-import LoggerGetSinceController from '@/actions/App/Modules/Logger/Controllers/LoggerGetSinceController';
+import { route } from 'ziggy-js';
 
 router.reload({ only: ['start_session_at'] });
 
@@ -65,7 +64,7 @@ const getLogs = async () => {
         return;
     }
 
-    const fetchedLogs = await api.get<{ logs: Log[]; counts: LogCount[] }>(LoggerGetSinceController({ query: { since: since.value } }).url);
+    const fetchedLogs = await api.get<{ logs: Log[]; counts: LogCount[] }>(route('api.logger.since', { since: since.value }));
 
     logs.value = fetchedLogs.logs;
     logsCount.value = fetchedLogs.counts;

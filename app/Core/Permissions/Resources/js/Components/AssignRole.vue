@@ -19,9 +19,7 @@ import type { Role } from '../types/role';
 import { computed, onMounted, ref } from 'vue';
 import { useApi } from '@modules/Module/Composables/useApi';
 import { useGate } from '@modules/Module/Composables/useGate';
-
-import RoleApiAllController from '@/actions/App/Core/Permissions/Controllers/RoleApiAllController';
-import RoleApiGetController from '@/actions/App/Core/Permissions/Controllers/RoleApiGetController';
+import { route } from 'ziggy-js';
 
 const gate = useGate();
 const api = useApi();
@@ -36,10 +34,10 @@ form.extensions.roles = [];
 const roleItems = computed(() => roles.value.map((r) => ({ value: r.id, label: r.name })));
 
 onMounted(async () => {
-    roles.value = await api.get<Role[]>(RoleApiAllController.url());
+    roles.value = await api.get<Role[]>(route('api.roles.all'));
 
     if (user) {
-        const userRoles: Role[] = await api.get<Role[]>(RoleApiGetController.url({ id: user.id }));
+        const userRoles: Role[] = await api.get<Role[]>(route('api.roles.get', { id: user.id }));
         form.extensions.roles = userRoles.map((r) => r.id);
     }
 });

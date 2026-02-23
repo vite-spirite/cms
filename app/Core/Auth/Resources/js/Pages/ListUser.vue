@@ -11,7 +11,7 @@
         <template #body>
             <UPage class="container mx-auto">
                 <div v-if="gate.can('user_create')" class="w-full text-right">
-                    <UButton :to="CreateUserController.url()" color="success" leading-icon="i-lucide-plus" variant="soft">Create user</UButton>
+                    <UButton :to="route('admin.users.create')" color="success" leading-icon="i-lucide-plus" variant="soft">Create user</UButton>
                 </div>
 
                 <UTable :columns="columns" :data="users" />
@@ -28,11 +28,9 @@ import { router, usePage } from '@inertiajs/vue3';
 import { TableColumn } from '@nuxt/ui';
 import { format } from 'date-fns';
 import { useGate } from '@modules/Module/Composables/useGate';
+import { route } from 'ziggy-js';
 
 import Layout from '@/Layout/Dashboard.vue';
-import CreateUserController from '@/actions/App/Core/Auth/Controllers/CreateUserController';
-import EditUserController from '@/actions/App/Core/Auth/Controllers/EditUserController';
-import DeleteUserController from '@/actions/App/Core/Auth/Controllers/DeleteUserController';
 
 defineOptions({ layout: Layout });
 
@@ -72,7 +70,7 @@ const columns: TableColumn<User>[] = [
                     variant: 'soft',
                     color: 'info',
                     icon: 'i-lucide-pencil',
-                    to: EditUserController.url({ id: row.original.id }),
+                    to: route('admin.users.edit', { id: row.original.id }),
                 });
 
                 components.push(element);
@@ -83,7 +81,7 @@ const columns: TableColumn<User>[] = [
                     variant: 'soft',
                     color: 'error',
                     icon: 'i-lucide-trash',
-                    onClick: () => router.delete(DeleteUserController.url({ id: row.original.id })),
+                    onClick: () => router.delete(route('admin.users.delete', { id: row.original.id })),
                 });
 
                 components.push(element);
