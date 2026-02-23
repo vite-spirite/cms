@@ -19,6 +19,21 @@ class ModuleManager extends ServiceProvider
         return $this->activeModules;
     }
 
+    public function getAvailableModules(): array
+    {
+        return $this->modules;
+    }
+
+    public function getModule(string $moduleName): array|null
+    {
+        return $this->modules[$moduleName] ?? null;
+    }
+
+    public function isModuleLoaded(string $moduleName): bool
+    {
+        return in_array($moduleName, $this->activeModules);
+    }
+
     public function discovers(): void
     {
         $this->modules = [];
@@ -68,12 +83,59 @@ class ModuleManager extends ServiceProvider
             return;
         }
 
-        if (Arr::has($this->activeModules, $moduleName)) {
+        if (in_array($moduleName, $this->activeModules)) {
             return;
         }
 
         $this->app->register($moduleProvider);
         $this->activeModules[] = $moduleName;
+    }
+
+    public function loadModule(string $moduleName): bool
+    {
+        $module = $this->modules[$moduleName] ?? null;
+
+        if (!$module) {
+            return false;
+        }
+
+        if (in_array($moduleName, $this->activeModules)) {
+            return false;
+        }
+
+        Module::updateOrCreate(['name' => $moduleName], ['name' => $moduleName, 'loaded' => true, 'loaded_at' => now()->toISOString()]);
+        $this->registerProvider($module);
+        return true;
+    }
+
+    public function unloadModule(string $moduleName): bool
+    {
+        $module = $this->modules[$moduleName] ?? null;
+
+        if (!$module) {
+            return false;
+        }
+
+        if (!in_array($moduleName, $this->activeModules)) {
+            return false;
+        }
+
+        Module::updateOrCreate(['name' => $moduleName], ['name' => $moduleName, 'loaded' => false]);
+        $this->unloadProvider($moduleName);
+        return true;
+
+    }
+
+    public function unloadProvider(string $moduleName): void
+    {
+        if (!in_array($moduleName, $this->activeModules)) {
+            return;
+        }
+
+        $this->activeModules = array_filter(
+            $this->activeModules,
+            fn($name) => $name !== $moduleName
+        );
     }
 
     public function loadStoredModules(): void

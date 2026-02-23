@@ -8,7 +8,21 @@ class ModuleServiceProvider extends BaseModuleServiceProvider
 {
     protected string $name = 'module';
 
-    protected array $permissions = [];
+    protected array $permissions = [
+        'module_manage' => [
+            'name' => 'Manage modules',
+            'description' => 'Load or unload modules',
+        ]
+    ];
 
-    protected array $navigations = [];
+    public function getNavigations(): array
+    {
+        return [
+            [
+                'label' => 'Modules',
+                'route' => 'admin.home',
+                'icon' => 'i-lucide-blocks',
+            ]
+        ];
+    }
 }
