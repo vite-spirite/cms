@@ -5,6 +5,8 @@ namespace App\Core\Auth\Controllers;
 use App\Core\Auth\Events\UserCreated;
 use App\Core\Auth\Models\User;
 use App\Core\Auth\Requests\CreateUserRequest;
+use App\Core\Module\ModuleHelper;
+use App\Modules\Logger\Facades\CmsLog;
 use Illuminate\Support\Facades\Redirect;
 
 class CreateUserRequestController
@@ -25,6 +27,11 @@ class CreateUserRequestController
         $user->save();
 
         UserCreated::dispatch($user, $payload['extensions']);
+
+        ModuleHelper::when('Logger', function () use ($user) {
+            CmsLog::info('Auth', 'user.created', "User '{$user->name}' successfully created.", ['user' => $user->toArray()], $user);
+        });
+
         return Redirect::route('admin.users.index')->with(['success' => ['title' => 'User', 'description' => 'Successfully Created User']]);
     }
 }
