@@ -9,6 +9,7 @@ use App\Core\Module\ModuleHelper;
 use App\Core\Permissions\Models\Permission;
 use App\Core\Permissions\Models\Role;
 use App\Core\Permissions\Service\PermissionRegistry;
+use App\Modules\Logger\Facades\CmsLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -172,12 +173,20 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
                 $user = \auth()->user();
                 if ($user->can('role_assign')) {
                     $event->user->roles()->sync($event->payload['roles']);
+
+                    ModuleHelper::when('Logger', function () use ($event) {
+                        CmsLog::info(category: 'Permission', action: 'permission.assign', message: "Add roles to user {$event->user->name}.", context: $event->user->roles()->get()->toArray(), subject: $event->user);
+                    });
                 }
 
                 if ($user->can('permission_assign')) {
                     $this->syncDatabasePermissions();
                     $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
                     $event->user->permissions()->sync($ids);
+
+                    ModuleHelper::when('Logger', function () use ($event) {
+                        CmsLog::info(category: 'Permission', action: 'permission.assign', message: "Add permissions to user {$event->user->name}.", context: $event->user->permissions()->get()->toArray(), subject: $event->user);
+                    });
                 }
             });
 
@@ -185,13 +194,24 @@ class PermissionServiceProvider extends \App\Core\Module\BaseModuleServiceProvid
                 $user = \auth()->user();
 
                 if ($user->can('role_assign')) {
+                    $previous = $event->user->roles()->get()->toArray();
                     $event->user->roles()->sync($event->payload['roles']);
+
+                    ModuleHelper::when('Logger', function () use ($event, $previous) {
+                        CmsLog::info(category: 'Permission', action: 'permission.assign', message: "Update roles to user {$event->user->name}.", context: ['after' => $previous, 'before' => $event->user->roles()->get()->toArray()], subject: $event->user);
+                    });
                 }
 
                 if ($user->can('permission_assign')) {
                     $this->syncDatabasePermissions();
+                    $previous = $event->user->permissions()->get()->toArray();
+
                     $ids = Permission::whereIn('name', $event->payload['permissions'])->pluck('id')->all();
                     $event->user->permissions()->sync($ids);
+
+                    ModuleHelper::when('Logger', function () use ($event, $previous) {
+                        CmsLog::info(category: 'Permission', action: 'permission.assign', message: "Update permissions to user {$event->user->name}.", context: ['after' => $previous, 'before' => $event->user->permissions()->get()->toArray()], subject: $event->user);
+                    });
                 }
             });
         });

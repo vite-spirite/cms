@@ -15,6 +15,7 @@ return new class extends \Illuminate\Database\Migrations\Migration {
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropIndex('users_is_owner_index');
             $table->dropColumn('is_owner');
         });
     }

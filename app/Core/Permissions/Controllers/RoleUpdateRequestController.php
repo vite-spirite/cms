@@ -2,11 +2,13 @@
 
 namespace App\Core\Permissions\Controllers;
 
+use App\Core\Module\ModuleHelper;
 use App\Core\Permissions\Events\RoleUpdated;
 use App\Core\Permissions\Models\Permission;
 use App\Core\Permissions\Models\Role;
 use App\Core\Permissions\Requests\UpdateRoleRequest;
 use App\Core\Permissions\Service\PermissionRegistry;
+use App\Modules\Logger\Facades\CmsLog;
 
 class RoleUpdateRequestController
 {
@@ -20,6 +22,8 @@ class RoleUpdateRequestController
             return \Redirect::route('permissions.roles.list')->with('error', ['title' => 'Role update', 'description' => 'Database role not found.']);
         }
 
+        $original = $role->toArray();
+
         $permissionRegistry = app()->make(PermissionRegistry::class);
         $permissionRegistry->sync();
 
@@ -29,6 +33,10 @@ class RoleUpdateRequestController
         $role->save();
 
         RoleUpdated::dispatch($role, $payload['extensions']);
+
+        ModuleHelper::when('Logger', function () use ($role, $original) {
+            CmsLog::info(category: 'Permission', action: 'role.updated', message: "Role '{$role->name}' successfully updated.", context: ['after' => $role->toArray(), 'before' => $original], subject: $role);
+        });
 
         return \Redirect::route('permissions.roles.list')->with('success', ['title' => 'Role update', 'description' => 'Role updated successfully.']);
     }
