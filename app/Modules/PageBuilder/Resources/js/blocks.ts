@@ -1,0 +1,6 @@
+import BlockRegistry from './blockRegistry';
+
+BlockRegistry.register('text', () => import('./Blocks/TextBlock.vue'));
+BlockRegistry.register('image', () => import('./Blocks/ImageBlock.vue'));
+BlockRegistry.register('column', () => import('./Blocks/ColumnBlock.vue'));
+BlockRegistry.register('row', () => import('./Blocks/RowBlock.vue'));

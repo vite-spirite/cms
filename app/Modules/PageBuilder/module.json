@@ -1,0 +1,8 @@
+{
+    "name": "PageBuilder",
+    "display_name": "Page builder",
+    "description": "Page builder module",
+    "version": "1.0.0",
+    "type": "module",
+    "provider": "App\\Modules\\PageBuilder\\Providers\\PageBuilderServiceProvider"
+}
