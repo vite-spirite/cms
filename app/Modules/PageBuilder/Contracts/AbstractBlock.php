@@ -33,7 +33,7 @@ abstract class AbstractBlock implements BlockInterface
 
             if (($rules['required'] ?? false) && empty($value)) {
                 throw new InvalidArgumentException(
-                    sprintf('The field “%s” is required for the block “%s.”', $field, static::type())
+                    sprintf('The field "%s" is required for the block "%s."', $field, static::type())
                 );
             }
 
@@ -47,6 +47,13 @@ abstract class AbstractBlock implements BlockInterface
 
     abstract public static function type(): string;
 
+    public function toRenderArray(): array
+    {
+        return array_merge($this->toArray(), [
+            'data' => array_merge($this->data, $this->data()),
+        ]);
+    }
+
     public function toArray(): array
     {
         return [
@@ -55,6 +62,11 @@ abstract class AbstractBlock implements BlockInterface
             'order' => $this->order,
             'type' => static::type()
         ];
+    }
+
+    public function data(): array
+    {
+        return [];
     }
 
     public function getId(): string

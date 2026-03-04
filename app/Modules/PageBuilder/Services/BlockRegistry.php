@@ -58,4 +58,45 @@ class BlockRegistry
             'schema' => $class::schema()
         ];
     }
+
+    public function serialize(array $blocks): array
+    {
+        return array_map(function ($block) {
+            $instance = $this->resolveInstance($block);
+            $b = $instance->toArray();
+
+            if (isset($b['data']['children'])) {
+                $b['data']['children'] = $this->serialize($b['data']['children']);
+            }
+
+            return $b;
+        }, $blocks);
+    }
+
+    public function resolveInstance(array $block): AbstractBlock|array
+    {
+        $class = $this->blocks[$block['type']] ?? null;
+        if (!$class) {
+            return $block;
+        }
+
+        $schemaKeys = array_keys($class::schema());
+        $cleanData = array_intersect_key($block['data'] ?? [], array_flip($schemaKeys));
+
+        return new $class($block['id'], $cleanData, $block['order']);
+    }
+
+    public function render(array $blocks): array
+    {
+        return array_map(function ($block) {
+            $instance = $this->resolveInstance($block);
+            $b = $instance->toRenderArray();
+
+            if (isset($b['data']['children'])) {
+                $b['data']['children'] = $this->render($b['data']['children']);
+            }
+
+            return $b;
+        }, $blocks);
+    }
 }

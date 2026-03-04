@@ -7,6 +7,7 @@ use App\Core\Module\ModuleHelper;
 use App\Modules\Logger\Facades\CmsLog;
 use App\Modules\PageBuilder\Models\Page;
 use App\Modules\PageBuilder\Requests\CreatePageRequest;
+use App\Modules\PageBuilder\Services\BlockRegistry;
 use Illuminate\Support\Carbon;
 
 class PageBuilderCreateRequestController
@@ -19,8 +20,10 @@ class PageBuilderCreateRequestController
             return \Redirect::back();
         }
 
+        $blockRegistry = app(BlockRegistry::class);
         $payload = $request->validated();
         $content = $this->regenerateIds($payload['content']);
+        $content = $blockRegistry->serialize($content);
 
         if (!$payload['slug']) {
             $date = Carbon::now()->timestamp;

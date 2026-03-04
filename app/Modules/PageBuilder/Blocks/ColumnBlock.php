@@ -35,12 +35,8 @@ class ColumnBlock extends \App\Modules\PageBuilder\Contracts\AbstractBlock
         ];
     }
 
-    public function toArray(): array
+    public function data(): array
     {
-        $base = parent::toArray();
-
-        $base['children'] = $this->data['children'] ?? [];
-
-        return $base;
+        return [];
     }
 }

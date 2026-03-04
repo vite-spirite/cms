@@ -14,9 +14,12 @@ class PageBuilderEditController
         $blockRegistry = app(BlockRegistry::class);
         $definitions = $blockRegistry->definitions();
 
+        $pageArr = $page->toArray();
+        $pageArr['content'] = $blockRegistry->render($pageArr['content']);
+
         return Inertia::render('PageBuilder::builder', [
             'blocks' => $definitions,
-            'page' => $page
+            'page' => $pageArr
         ]);
     }
 }
