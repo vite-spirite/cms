@@ -140,10 +140,19 @@ class ModuleManager extends ServiceProvider
 
     public function loadStoredModules(): void
     {
-        $moduleList = Module::orderBy('id', 'ASC')->where('loaded', true)->get();
-        foreach ($moduleList as $dbModule) {
-            $module = $this->modules[$dbModule->name];
-            $this->registerProvider($module);
+        try {
+            if (!\Schema::hasTable('modules')) {
+                logger()->info("Stored 'modules' table is not exists.");
+            }
+
+            $moduleList = Module::orderBy('id', 'ASC')->where('loaded', true)->get();
+            foreach ($moduleList as $dbModule) {
+                $module = $this->modules[$dbModule->name];
+                $this->registerProvider($module);
+            }
+        } catch (\Exception $exception) {
+            logger()->info("Stored 'modules' table is not exists.", [$exception->getMessage()]);
         }
+
     }
 }
