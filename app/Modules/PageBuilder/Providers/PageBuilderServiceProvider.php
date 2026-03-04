@@ -6,6 +6,7 @@ namespace App\Modules\PageBuilder\Providers;
 use App\Core\Module\BaseModuleServiceProvider;
 use App\Modules\PageBuilder\Blocks\ColumnBlock;
 use App\Modules\PageBuilder\Blocks\ImageBlock;
+use App\Modules\PageBuilder\Blocks\PageBlock;
 use App\Modules\PageBuilder\Blocks\RowBlock;
 use App\Modules\PageBuilder\Blocks\TextBlock;
 use App\Modules\PageBuilder\Services\BlockRegistry;
@@ -71,7 +72,8 @@ class PageBuilderServiceProvider extends BaseModuleServiceProvider
                 TextBlock::class,
                 ImageBlock::class,
                 ColumnBlock::class,
-                RowBlock::class
+                RowBlock::class,
+                PageBlock::class,
             ]);
         });
     }

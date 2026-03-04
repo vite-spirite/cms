@@ -18,9 +18,9 @@
             :editable="editable"
             :selected="store.selectedBlock?.id === block.id"
             v-bind="block.data"
-            @click.stop="store.selectBlock(block)"
+            @click.stop="() => store.selectBlock(block)"
         >
-            <template v-if="block.data?.children" #default="{ containerClass, containerStyle }">
+            <template v-if="block.data && block.data?.children" #default="{ containerClass, containerStyle }">
                 <sortable
                     v-if="editable"
                     :key="store.dragVersion"

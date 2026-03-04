@@ -117,7 +117,7 @@ const onSave = () => {
 };
 
 if (page.props.page) {
-    store.hydrate(page.props.page);
+    store.hydrate(page.props.page, definitions.value);
 }
 
 onUnmounted(() => {

@@ -17,7 +17,7 @@ const { space_y, children, editable } = defineProps<{
     selected: boolean;
 }>();
 
-const classes = computed(() => twMerge(`w-full flex flex-col justify-start items-start p-2`, children.length === 0 ? 'min-h-16 min-w-sm' : ''));
+const classes = computed(() => twMerge(`w-full flex flex-col justify-start items-start`, children.length === 0 ? 'min-h-16 min-w-sm' : ''));
 
 const styles = computed(() => ({
     gap: `${space_y}px`,

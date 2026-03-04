@@ -18,13 +18,19 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
     const dragging = ref<PageBlock | null>(null);
     const dragVersion = ref(0);
 
-    const createBlock = (type: string, definition: Definition): PageBlock => {
+    const getDefaultValue = (definition: Definition) => {
         const data: Record<string, any> = {};
 
         Object.keys(definition.schema).forEach((key) => {
             const defaultValue = definition.schema[key].default ?? '';
             data[key] = typeof defaultValue === 'object' && defaultValue !== null ? JSON.parse(JSON.stringify(defaultValue)) : defaultValue;
         });
+
+        return data;
+    };
+
+    const createBlock = (type: string, definition: Definition): PageBlock => {
+        const data = getDefaultValue(definition);
 
         return {
             id: uuidv4(),
@@ -148,7 +154,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         dragVersion.value++;
     };
 
-    const hydrate = (page: Page) => {
+    const hydrate = (page: Page, definitions: Record<string, Definition>) => {
         settings.value = {
             title: page.title,
             og_balises: page.og_balises,
@@ -157,6 +163,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         };
 
         blocks.value = page.content;
+        blocks.value = blocks.value.map((b) => updateData(b, definitions));
 
         dragVersion.value++;
     };
@@ -175,6 +182,27 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
 
         dragging.value = null;
         dragVersion.value = 0;
+    };
+
+    const updateData = (block: PageBlock, definitions: Record<string, Definition>): PageBlock => {
+        const definition = definitions[block.type];
+
+        if (!definition) {
+            return block;
+        }
+
+        const defaultValue = getDefaultValue(definition);
+
+        block.data = {
+            ...defaultValue,
+            ...block.data,
+        };
+
+        if (block.data?.children) {
+            block.data.children = block.data.children.map((child: PageBlock) => updateData(child, definitions));
+        }
+
+        return block;
     };
 
     return {

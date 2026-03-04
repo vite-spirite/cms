@@ -19,6 +19,7 @@ import SelectInput from './Fields/SelectInput.vue';
 import TextareaInput from './Fields/TextareaInput.vue';
 import TextInput from './Fields/TextInput.vue';
 import NumberInput from './Fields/NumberInput.vue';
+import ColorInput from './Fields/ColorInput.vue';
 
 const fieldComponents: Record<string, Component> = {
     text: TextInput,
@@ -26,6 +27,7 @@ const fieldComponents: Record<string, Component> = {
     select: SelectInput,
     int: NumberInput,
     // image: resolveComponent('UInput'),
+    color: ColorInput,
 };
 
 const props = defineProps<{
