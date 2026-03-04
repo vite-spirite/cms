@@ -123,6 +123,9 @@
         "resources/js/**/*.tsx",
         "resources/js/**/*.vue",
         "auto-imports.d.ts",
-        "components.d.ts"
-    ]
+        "components.d.ts",
+        "app/Core/*/Resources/js/**/*",
+        "app/Modules/*/Resources/js/**/*"
+    ],
+    "exclude": ["node_modules", "vendor", "storage", "bootstrap/cache"]
 }
