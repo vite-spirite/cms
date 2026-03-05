@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { PageBlock } from '../types';
 import { twMerge } from 'tailwind-merge';
 import { computed } from 'vue';
+import type { PageBlock } from '../types';
 
-const { space_x, children, editable } = defineProps<{
+const { space_x, children } = defineProps<{
     id: string;
     space_x: number;
     children: PageBlock[];

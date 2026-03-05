@@ -24,14 +24,15 @@
 
 <script lang="ts" setup>
 import { router, usePage } from '@inertiajs/vue3';
-import { computed, h, resolveComponent, VNode } from 'vue';
+import { useGate } from '@modules/Module/Composables/useGate';
+import type { TableColumn } from '@nuxt/ui';
 import { format } from 'date-fns';
+import type { VNode } from 'vue';
+import { computed, h, resolveComponent } from 'vue';
 
 import Layout from '@/Layout/Dashboard.vue';
-import type { Page, PageStatus } from '../types';
-import { TableColumn } from '@nuxt/ui';
-import { useGate } from '@modules/Module/Composables/useGate';
 import { route } from 'ziggy-js';
+import type { Page, PageStatus } from '../types';
 
 defineOptions({ layout: Layout });
 

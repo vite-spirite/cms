@@ -1,4 +1,4 @@
-import { Component } from 'vue';
+import type { Component } from 'vue';
 
 let registry: Record<string, Component[]> = {};
 

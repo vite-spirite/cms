@@ -11,7 +11,7 @@
         <template #body>
             <UPage class="container mx-auto grid gap-6">
                 <form class="grid w-full gap-3" @submit.prevent="onSubmit">
-                    <ExtensionPoint :extension-props="{ form }" name="role.create.form.start" />
+                    <ExtensionPoint v-model="form.extensions" name="role.create.form.start" />
 
                     <UFormField label="Name:">
                         <UInput v-model="form.name" class="w-full" />
@@ -36,7 +36,7 @@
                         />
                     </UCard>
 
-                    <ExtensionPoint :extension-props="{ form }" name="role.create.form.end" />
+                    <ExtensionPoint v-model="form.extensions" name="role.create.form.end" />
 
                     <div class="text-right">
                         <UButton class="justify-center" type="submit">Create role</UButton>
@@ -49,12 +49,12 @@
 
 <script lang="ts" setup>
 import { useForm, usePage } from '@inertiajs/vue3';
+import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
+import type { CheckboxGroupItem } from '@nuxt/ui';
 import { computed } from 'vue';
 import Layout from '@/Layout/Dashboard.vue';
-import type { Permission } from '../types/role';
-import type { CheckboxGroupItem } from '@nuxt/ui';
-import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
 import { route } from 'ziggy-js';
+import type { Permission } from '../types/role';
 
 defineOptions({ layout: Layout });
 

@@ -1,4 +1,5 @@
-import { AsyncComponentLoader, defineAsyncComponent } from 'vue';
+import type { AsyncComponentLoader} from 'vue';
+import { defineAsyncComponent } from 'vue';
 
 class BlockRegistry {
     private blocks: Record<string, AsyncComponentLoader> = {};

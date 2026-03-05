@@ -48,7 +48,7 @@
                 </sortable>
 
                 <div v-else :class="`${containerClass}`" :style="containerStyle">
-                    <BlockRender v-for="child in block.data.children" :block="child" :editable="editable" />
+                    <BlockRender v-for="child in block.data.children" :key="child.id" :block="child" :editable="editable" />
                 </div>
             </template>
         </component>
@@ -57,11 +57,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
 import blockRegistry from '@modules/PageBuilder/blockRegistry';
-import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
-import { Sortable } from 'sortablejs-vue3';
 import type { SortableEvent } from 'sortablejs';
+import { Sortable } from 'sortablejs-vue3';
+import { computed } from 'vue';
+import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
 
 const props = defineProps<{ block: any; editable: boolean }>();
 const resolvedComponent = computed(() => blockRegistry.resolve(props.block.type));

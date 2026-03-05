@@ -9,7 +9,8 @@
         </template>
         <template #body>
             <UButton
-                v-for="definition in definitions"
+                v-for="(definition, type) in definitions"
+                :key="type"
                 :icon="definition.icon"
                 :label="definition.label"
                 color="neutral"
@@ -73,18 +74,18 @@
 </template>
 
 <script lang="ts" setup>
-import Layout from '@/Layout/Dashboard.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { computed, onUnmounted } from 'vue';
-import BlockSettings from '../Components/BlockSettings.vue';
-import type { Definition, Page } from '../types';
-import PageSettings from '../Components/PageSettings.vue';
-import BlockRender from '../Components/BlockRender.vue';
-import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
-import { Sortable } from 'sortablejs-vue3';
 import type { SortableEvent } from 'sortablejs';
-import PageTree from '../Components/PageTree.vue';
+import { Sortable } from 'sortablejs-vue3';
+import { computed, onUnmounted } from 'vue';
+import Layout from '@/Layout/Dashboard.vue';
 import { route } from 'ziggy-js';
+import BlockRender from '../Components/BlockRender.vue';
+import BlockSettings from '../Components/BlockSettings.vue';
+import PageSettings from '../Components/PageSettings.vue';
+import PageTree from '../Components/PageTree.vue';
+import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
+import type { Definition, Page } from '../types';
 
 defineOptions({ layout: Layout });
 

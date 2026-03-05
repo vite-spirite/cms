@@ -10,10 +10,10 @@
 
 <script lang="ts" setup>
 import { router, usePage } from '@inertiajs/vue3';
+import { useGate } from '@modules/Module/Composables/useGate';
+import type { TableColumn } from '@nuxt/ui';
 import { computed, h, resolveComponent } from 'vue';
 import type { User } from '@/types';
-import { TableColumn } from '@nuxt/ui';
-import { useGate } from '@modules/Module/Composables/useGate';
 
 const UCheckbox = resolveComponent('UCheckbox');
 const page = usePage();
@@ -22,8 +22,9 @@ const allow = gate.can('role_assign');
 
 const users = computed<User[]>(() => (page.props.users as User[]) ?? []);
 
-const props = defineProps<{ form: { extensions: Record<string, any> }; members?: User[] }>();
-props.form.extensions.users = props.members ? props.members.map((v) => v.id) : [];
+const props = defineProps<{ members?: User[] }>();
+const extensionValues = defineModel<Record<string, unknown>>({ required: true });
+extensionValues.value.users = props.members ? (props.members.map((v) => v.id) as number[]) : ([] as number[]);
 
 router.reload({
     only: ['users'],
@@ -42,15 +43,15 @@ const columns: TableColumn<{ id: number; name: string; email: string }>[] = [
         id: 'select',
         cell: ({ row }) => {
             return h(UCheckbox, {
-                modelValue: props.form.extensions.users.includes(row.original.id),
+                modelValue: (extensionValues.value.users as number[]).includes(row.original.id),
                 'onUpdate:modelValue': (value: boolean) => {
-                    row.toggleSelected(!!value);
+                    row.toggleSelected(value);
 
                     if (value) {
-                        props.form.extensions.users.push(row.original.id);
+                        extensionValues.value.users.push(row.original.id);
                     } else {
-                        const index = props.form.extensions.users.findIndex((e: number) => e === row.original.id);
-                        props.form.extensions.users.splice(index, 1);
+                        const index = extensionValues.value.users.findIndex((e: number) => e === row.original.id);
+                        extensionValues.value.users.splice(index, 1);
                     }
                 },
             });

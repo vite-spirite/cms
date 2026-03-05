@@ -21,11 +21,11 @@
 </template>
 
 <script lang="ts" setup>
-import Layout from '@/Layout/Dashboard.vue';
 import { router, usePage } from '@inertiajs/vue3';
-import { computed, h, ref, resolveComponent, type VNode } from 'vue';
-import { route } from 'ziggy-js';
 import type { TableColumn } from '@nuxt/ui';
+import { computed, h, ref, resolveComponent, type VNode } from 'vue';
+import Layout from '@/Layout/Dashboard.vue';
+import { route } from 'ziggy-js';
 import type { Role as RoleType } from '../types/role';
 
 type Role = {

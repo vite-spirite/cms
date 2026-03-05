@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { Definition, Page, PageBlock, PageBuilderSettings } from '../types';
-import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
+import { ref } from 'vue';
+import type { Definition, Page, PageBlock, PageBuilderSettings } from '../types';
 
 export const usePageBuilderStore = defineStore('pageBuilder', () => {
     const blocks = ref<PageBlock[]>([] as PageBlock[]);

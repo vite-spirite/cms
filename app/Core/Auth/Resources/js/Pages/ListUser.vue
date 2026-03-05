@@ -21,16 +21,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from '@/types';
 
-import { computed, h, resolveComponent, type VNode } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
-import { TableColumn } from '@nuxt/ui';
-import { format } from 'date-fns';
 import { useGate } from '@modules/Module/Composables/useGate';
+import type { TableColumn } from '@nuxt/ui';
+import { format } from 'date-fns';
+import { computed, h, resolveComponent, type VNode } from 'vue';
+import Layout from '@/Layout/Dashboard.vue';
+import type { User } from '@/types';
 import { route } from 'ziggy-js';
 
-import Layout from '@/Layout/Dashboard.vue';
 
 defineOptions({ layout: Layout });
 

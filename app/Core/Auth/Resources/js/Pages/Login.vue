@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts" setup>
-import z from 'zod';
-import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui';
 import { useForm } from '@inertiajs/vue3';
+import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui';
+import z from 'zod';
 import { route } from 'ziggy-js';
 
 const form = useForm({

@@ -2,11 +2,11 @@
     <Head>
         <title>{{ title }}</title>
 
-        <meta v-for="(balise, idx) in ogBalises" :content="balise" :name="idx" />
+        <meta v-for="(balise, idx) in ogBalises" :key="idx" :content="balise" :name="idx" />
     </Head>
 
     <div>
-        <BlockRender v-for="block in content" :block="block" :editable="false" />
+        <BlockRender v-for="block in content" :key="block.id" :block="block" :editable="false" />
     </div>
 </template>
 
@@ -14,9 +14,9 @@
 import { Head } from '@inertiajs/vue3';
 
 import { usePage } from '@inertiajs/vue3';
-import { PageBlock } from '../types';
 import { computed } from 'vue';
 import BlockRender from '../Components/BlockRender.vue';
+import type { PageBlock } from '../types';
 
 const page = usePage<{ content: PageBlock[]; og_balises: Record<string, string>; title: string }>();
 const content = computed(() => page.props.content);

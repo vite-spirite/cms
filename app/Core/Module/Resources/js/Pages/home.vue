@@ -20,7 +20,7 @@
                         variant="soft"
                     />
 
-                    <UCard v-for="moduleKey in Object.keys(modules)">
+                    <UCard v-for="moduleKey in Object.keys(modules)" :key="moduleKey">
                         <div class="grid w-full gap-2">
                             <div class="flex items-center justify-between">
                                 <h2 class="text-xl font-semibold">{{ modules[moduleKey].name }}</h2>
@@ -41,12 +41,11 @@
 </template>
 
 <script lang="ts" setup>
-import Layout from '@/Layout/Dashboard.vue';
 import { router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { useApi } from '@modules/Module/Composables/useApi';
-import { route } from 'ziggy-js';
 import { useGate } from '@modules/Module/Composables/useGate';
+import { computed } from 'vue';
+import Layout from '@/Layout/Dashboard.vue';
+import { route } from 'ziggy-js';
 
 const gate = useGate();
 
@@ -62,8 +61,6 @@ const page = usePage<Props>();
 const npm = computed(() => page.props.npmAvailable);
 const modules = computed(() => page.props.modules);
 const moduleEnabled = computed(() => page.props.moduleEnabled);
-
-const api = useApi();
 
 const loadModule = async (module: string) => {
     router.get(route('admin.module.toggle', { module }), {}, { preserveState: false, async: true, showProgress: true });

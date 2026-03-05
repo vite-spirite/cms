@@ -15,7 +15,6 @@ const tree = computed(() => {
     return recursiveTree(store.blocks);
 });
 
-const treeKey = computed(() => JSON.stringify(store.blocks.map((b) => ({ id: b.id, order: b.order }))));
 const selected = ref<TreeItem | null>(null);
 
 watch(

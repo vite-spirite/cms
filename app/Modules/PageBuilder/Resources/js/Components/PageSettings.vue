@@ -13,7 +13,7 @@
         </UFormField>
 
         <UFormField :ui="{ container: 'flex w-full flex-col items-start justify-start space-y-2' }" class="w-full" label="Page og balises:">
-            <div v-for="(balise, index) in og_balises" class="relative grid w-full grid-cols-2 gap-2">
+            <div v-for="(balise, index) in og_balises" :key="index" class="relative grid w-full grid-cols-2 gap-2">
                 <UFormField class="w-full" label="Balise name:">
                     <UInput v-model="balise.name" class="w-full" />
                 </UFormField>
@@ -37,9 +37,9 @@
 </template>
 
 <script lang="ts" setup>
-import { PageStatus } from '../types';
 import { onMounted, ref, watch } from 'vue';
 import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
+import type { PageStatus } from '../types';
 
 const store = usePageBuilderStore();
 const items = ref<PageStatus[]>(['draft', 'published', 'archived']);

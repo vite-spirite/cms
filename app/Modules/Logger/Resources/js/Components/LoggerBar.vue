@@ -6,7 +6,13 @@
                 <UChip :text="logsCount.reduce((acc, v) => acc + v.count, 0)" color="error" inset size="3xl" standalone></UChip>
             </UButton>
 
-            <UButton v-for="level in logsLevel" :color="levelColors[level]" class="flex items-center space-x-2 rounded-none" variant="ghost">
+            <UButton
+                v-for="level in logsLevel"
+                :key="level"
+                :color="levelColors[level]"
+                class="flex items-center space-x-2 rounded-none"
+                variant="ghost"
+            >
                 {{ level }}
                 <UChip :color="levelColors[level]" :text="logsCount.find((v) => v.level === level)?.count ?? 0" inset size="3xl" standalone></UChip>
             </UButton>
@@ -25,17 +31,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { Log, LogCount, LogLevel } from '../types/logs';
-import type { TableColumn } from '@nuxt/ui';
-import type { Row, TableMeta } from '@tanstack/vue-table';
-
-import { computed, h, onMounted, onUnmounted, ref, resolveComponent } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { useApi } from '@modules/Module/Composables/useApi';
 import { useGate } from '@modules/Module/Composables/useGate';
+import type { TableColumn } from '@nuxt/ui';
+import type { Row, TableMeta } from '@tanstack/vue-table';
 import { format } from 'date-fns';
-import { vHighlight } from '../Directives/highlightjs';
+import { computed, h, onMounted, onUnmounted, ref, resolveComponent } from 'vue';
 import { route } from 'ziggy-js';
+import { vHighlight } from '../Directives/highlightjs';
+import type { Log, LogCount, LogLevel } from '../types/logs';
 
 router.reload({ only: ['start_session_at'] });
 
@@ -51,7 +56,7 @@ const logs = ref<Log[]>([]);
 const logsCount = ref<LogCount[]>([]);
 const logsLevel = ref<LogLevel[]>(['success', 'error', 'warning', 'info', 'debug']);
 
-const levelColors: Record<LogLevel, string> = {
+const levelColors: Record<LogLevel, 'info' | 'warning' | 'error' | 'success' | 'neutral'> = {
     success: 'success',
     error: 'error',
     warning: 'warning',

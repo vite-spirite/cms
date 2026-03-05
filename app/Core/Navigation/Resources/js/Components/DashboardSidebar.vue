@@ -19,8 +19,8 @@
 
 <script lang="ts" setup>
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
+import { computed } from 'vue';
 
 const page = usePage();
 const navigation = computed(() => page.props.navigation);

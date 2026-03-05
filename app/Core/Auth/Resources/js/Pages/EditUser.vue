@@ -10,7 +10,7 @@
 
         <template #body>
             <form class="container mx-auto grid gap-6" @submit.prevent="onSubmit">
-                <ExtensionPoint :extension-props="{ form, user: page.props.user }" name="users.edit.start" />
+                <ExtensionPoint v-model="form.extensions" :extension-props="{ user: page.props.user }" name="users.edit.start" />
 
                 <UCard>
                     <template #header>
@@ -42,7 +42,7 @@
                     </div>
                 </UCard>
 
-                <ExtensionPoint :extension-props="{ form, user: page.props.user }" name="users.edit.end" />
+                <ExtensionPoint v-model="form.extensions" :extension-props="{ user: page.props.user }" name="users.edit.end" />
 
                 <div class="w-full text-right">
                     <UButton class="justify-center" color="info" label="Edit user" type="submit" />
@@ -53,12 +53,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from '@/types';
-
 import { useForm, usePage } from '@inertiajs/vue3';
 
 import ExtensionPoint from '@modules/Module/Components/ExtensionPoint.vue';
 import Layout from '@/Layout/Dashboard.vue';
+import type { User } from '@/types';
 import { route } from 'ziggy-js';
 
 defineOptions({ layout: Layout });
