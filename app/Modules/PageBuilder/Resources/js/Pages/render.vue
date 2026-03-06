@@ -15,9 +15,12 @@ import { Head } from '@inertiajs/vue3';
 
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import Layout from '@/Layout/public.vue';
 import BlockRender from '../Components/BlockRender.vue';
-import type { PageBlock } from '../types';
 import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
+import type { PageBlock } from '../types';
+
+defineOptions({ layout: Layout });
 
 const page = usePage<{ content: PageBlock[]; og_balises: Record<string, string>; title: string; id: number; slug: string }>();
 const content = computed(() => page.props.content);

@@ -18,9 +18,9 @@ import { type Component, computed } from 'vue';
 import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
 import ColorInput from './Fields/ColorInput.vue';
 import NumberInput from './Fields/NumberInput.vue';
+import RichTextInput from './Fields/RichTextInput.vue';
 import SelectInput from './Fields/SelectInput.vue';
 import TextInput from './Fields/TextInput.vue';
-import RichTextInput from './Fields/RichTextInput.vue';
 
 const fieldComponents: Record<string, Component> = {
     text: TextInput,

@@ -11,13 +11,12 @@
 import { usePageBuilderStore } from '@modules/PageBuilder/Stores/usePageBuilderStore';
 import type { EditorToolbarItem } from '@nuxt/ui';
 
-const { id, editable, selected, colors } = defineProps<{
+const { id, editable, selected } = defineProps<{
     id: string;
     content: string;
     align: string;
     editable: boolean;
     selected: boolean;
-    colors: 'light' | 'dark';
 }>();
 
 const store = usePageBuilderStore();
