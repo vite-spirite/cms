@@ -154,7 +154,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         dragVersion.value++;
     };
 
-    const hydrate = (page: Page, definitions: Record<string, Definition>) => {
+    const hydrate = (page: Page, definitions?: Record<string, Definition>) => {
         settings.value = {
             title: page.title,
             og_balises: page.og_balises,
@@ -163,7 +163,10 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         };
 
         blocks.value = page.content;
-        blocks.value = blocks.value.map((b) => updateData(b, definitions));
+
+        if (definitions) {
+            blocks.value = blocks.value.map((b) => updateData(b, definitions));
+        }
 
         dragVersion.value++;
     };

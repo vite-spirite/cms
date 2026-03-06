@@ -23,6 +23,8 @@ class PageBuilderRenderController
             'content' => $blockRegistry->render($page->content),
             'og_balises' => $page->og_balises,
             'title' => $page->title,
+            'slug' => $page->slug,
+            'id' => $page->id,
         ]);
     }
 }

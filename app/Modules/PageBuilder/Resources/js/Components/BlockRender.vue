@@ -5,7 +5,7 @@
             :data-selected="store.selectedBlock?.id === block.id"
             class="pointer-events-none absolute inset-0 z-2 opacity-0 outline-2 outline-blue-500 hover:opacity-50 data-[selected=true]:opacity-100"
         >
-            <div class="pointer-events-auto absolute top-0 left-0 flex gap-1 bg-blue-500 px-2 py-0.5 text-xs text-white">
+            <div class="pointer-events-auto absolute top-0 right-0 flex gap-1 bg-blue-500 px-2 py-0.5 text-xs text-white">
                 <span>{{ block.type }}</span>
                 <button @click.stop="store.removeById(block.id)">✕</button>
             </div>

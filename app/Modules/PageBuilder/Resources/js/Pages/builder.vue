@@ -49,7 +49,7 @@
                     @start="(e: SortableEvent) => store.onDragStart(store.blocks[e.oldIndex ?? 0])"
                 >
                     <template #item="{ element }">
-                        <BlockRender :block="element" :editable="true" class="cursor-pointer transition-all duration-200 hover:opacity-75" />
+                        <BlockRender :block="element" :editable="true" class="cursor-pointer" />
                     </template>
                 </Sortable>
             </div>

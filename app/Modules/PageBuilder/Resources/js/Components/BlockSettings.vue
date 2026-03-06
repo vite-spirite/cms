@@ -19,12 +19,12 @@ import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
 import ColorInput from './Fields/ColorInput.vue';
 import NumberInput from './Fields/NumberInput.vue';
 import SelectInput from './Fields/SelectInput.vue';
-import TextareaInput from './Fields/TextareaInput.vue';
 import TextInput from './Fields/TextInput.vue';
+import RichTextInput from './Fields/RichTextInput.vue';
 
 const fieldComponents: Record<string, Component> = {
     text: TextInput,
-    richtext: TextareaInput,
+    richtext: RichTextInput,
     select: SelectInput,
     int: NumberInput,
     // image: resolveComponent('UInput'),

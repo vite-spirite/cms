@@ -60,6 +60,7 @@ export default defineConfig({
         }),
         ui({
             router: 'inertia',
+            colorMode: false,
         }),
     ],
     resolve: {
@@ -79,5 +80,14 @@ export default defineConfig({
                 resolve(__dirname, 'vendor/tightenco'),
             ],
         },
+    },
+    optimizeDeps: {
+        include: [
+            '@nuxt/ui > prosemirror-state',
+            '@nuxt/ui > prosemirror-transform',
+            '@nuxt/ui > prosemirror-model',
+            '@nuxt/ui > prosemirror-view',
+            '@nuxt/ui > prosemirror-gapcursor',
+        ],
     },
 });

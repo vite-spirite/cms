@@ -1,27 +1,16 @@
 <template>
-    <div>
-        <UEditor v-slot="{ editor }" v-model="block.data.content" :editable="editable" content-type="markdown">
-            <UEditorToolbar v-if="editable" v-show="selected" :editor="editor" :items="items" class="justify-center" />
-            <UEditorToolbar v-if="editable" :editor="editor" :items="items" layout="bubble" />
+    <UFormField :label="label" class="w-full">
+        <UEditor v-slot="{ editor }" v-model="model" class="w-full rounded-md border border-default" content-type="markdown">
+            <UEditorToolbar :editor="editor" :items="items" layout="bubble" />
         </UEditor>
-    </div>
+    </UFormField>
 </template>
 
 <script lang="ts" setup>
-import { usePageBuilderStore } from '@modules/PageBuilder/Stores/usePageBuilderStore';
 import type { EditorToolbarItem } from '@nuxt/ui';
 
-const { id, editable, selected, colors } = defineProps<{
-    id: string;
-    content: string;
-    align: string;
-    editable: boolean;
-    selected: boolean;
-    colors: 'light' | 'dark';
-}>();
-
-const store = usePageBuilderStore();
-const block = store.findBlockById(id);
+const model = defineModel<string>({ required: true });
+const { label } = defineProps<{ label: string }>();
 
 const items: EditorToolbarItem[][] = [
     [
