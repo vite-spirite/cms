@@ -12,6 +12,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         og_balises: {},
     });
 
+    const hoveredBlock = ref<PageBlock | null>(null);
     const selectedBlock = ref<PageBlock | null>(null);
     const selectedChildren = ref<number>(0);
 
@@ -208,6 +209,53 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         return block;
     };
 
+    const setHovered = (block: PageBlock | null): void => {
+        hoveredBlock.value = block;
+    };
+
+    const findParentBlock = (blocks: PageBlock[], block: PageBlock): PageBlock | null => {
+        for (const b of blocks) {
+            if (!b.data?.children) continue;
+
+            const found = b.data.children.find((child: PageBlock) => child.id === block.id);
+            if (found) return b;
+
+            const recursive = findParentBlock(b.data.children, block);
+            if (recursive) return recursive;
+        }
+
+        return null;
+    };
+
+    const selectParentBlock = (block: PageBlock) => {
+        const parent = findParentBlock(blocks.value, block);
+
+        if (parent) {
+            selectedBlock.value = parent;
+        }
+    };
+
+    const isBlockIsChildren = (block: PageBlock) => {
+        return !!findParentBlock(blocks.value, block);
+    };
+
+    const duplicateBlock = (source: PageBlock) => {
+        const parent = findParentBlock(blocks.value, source);
+        const duplicated: PageBlock = JSON.parse(JSON.stringify(source));
+        duplicated.id = uuidv4();
+
+        if (parent && parent.data.children) {
+            const sourceIndex = parent.data.children.findIndex((child: PageBlock) => child.id === source.id);
+            duplicated.order = sourceIndex + 1;
+
+            parent.data.children.splice(sourceIndex, 0, duplicated);
+            return;
+        }
+
+        blocks.value.push(duplicated);
+        syncOrder();
+    };
+
     return {
         blocks,
         settings,
@@ -227,5 +275,10 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         removeById,
         hydrate,
         reset,
+        hoveredBlock,
+        setHovered,
+        selectParentBlock,
+        isBlockIsChildren,
+        duplicateBlock,
     };
 });

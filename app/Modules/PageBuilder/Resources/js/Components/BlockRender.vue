@@ -3,10 +3,24 @@
         <div
             v-if="editable"
             :data-selected="store.selectedBlock?.id === block.id"
-            class="absolute top-1/2 left-2 z-10 flex -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-md bg-elevated/75 p-2 opacity-0 data-[selected=true]:opacity-100"
+            :data-visible="store.hoveredBlock?.id === block.id && store.selectedBlock === null"
+            class="absolute top-1/2 left-2 z-10 flex -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-md bg-elevated/75 p-2 opacity-0 transition-all group-hover/item:opacity-100 data-[selected=true]:opacity-100 data-[visible=true]:opacity-100"
         >
-            <UIcon class="handle size-6 text-neutral-500" name="i-lucide-grip-vertical" />
-            <UButton color="neutral" icon="i-lucide-x" size="sm" variant="link" @click.stop="store.removeById(block.id)" />
+            <UIcon class="handle size-6 cursor-grab text-neutral-500" name="i-lucide-grip-vertical" title="drag" />
+
+            <UButton
+                v-if="isParentSelectable"
+                color="neutral"
+                icon="i-lucide-corner-left-up"
+                size="sm"
+                title="Select parent"
+                variant="link"
+                @click="store.selectParentBlock(block)"
+            />
+
+            <UButton color="neutral" icon="i-lucide-copy" size="sm" title="duplicate" variant="link" @click.stop="store.duplicateBlock(block)" />
+            <UButton color="neutral" icon="i-lucide-trash" size="sm" title="delete" variant="link" @click.stop="store.removeById(block.id)" />
+            <UButton color="neutral" icon="i-lucide-x" size="sm" title="unselect" variant="link" @click.stop="store.selectedBlock(null)" />
         </div>
 
         <component
@@ -19,6 +33,8 @@
             class="transition-all"
             v-bind="block.data"
             @click.stop="() => store.selectBlock(block)"
+            @mouseenter.stop="store.setHovered(block)"
+            @mouseleave.stop="store.setHovered(null)"
         >
             <template v-if="block.data && block.data?.children" #default="{ containerClass, containerStyle }">
                 <sortable
@@ -66,12 +82,14 @@ import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
 const props = defineProps<{ block: any; editable: boolean }>();
 const resolvedComponent = computed(() => blockRegistry.resolve(props.block.type));
 const store = usePageBuilderStore();
+
+const isParentSelectable = computed(() => store.isBlockIsChildren(props.block));
 </script>
 
 <style scoped>
 @reference 'tailwindcss';
 
 .chosen {
-    @apply opacity-10 transition-all;
+    @apply opacity-50 transition-all;
 }
 </style>
