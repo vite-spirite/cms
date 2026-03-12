@@ -12,7 +12,6 @@ class FieldRegistry {
     }
 
     public resolve(type: string) {
-        console.log(type, this.fields[type]);
         return this.fields[type] ?? null;
     }
 
