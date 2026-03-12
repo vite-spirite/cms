@@ -2,7 +2,7 @@
 <template>
     <div v-if="store.selectedBlock" class="flex flex-col items-start justify-start space-y-2">
         <component
-            :is="fieldComponents[field.type]"
+            :is="FieldRegistry.resolve(field.type)"
             v-for="(field, key) in schema"
             :key="key"
             v-model="store.selectedBlock.data[key]"
@@ -13,23 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-import { type Component, computed } from 'vue';
+import { computed } from 'vue';
 
 import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
-import ColorInput from './Fields/ColorInput.vue';
-import NumberInput from './Fields/NumberInput.vue';
-import RichTextInput from './Fields/RichTextInput.vue';
-import SelectInput from './Fields/SelectInput.vue';
-import TextInput from './Fields/TextInput.vue';
-
-const fieldComponents: Record<string, Component> = {
-    text: TextInput,
-    richtext: RichTextInput,
-    select: SelectInput,
-    int: NumberInput,
-    // image: resolveComponent('UInput'),
-    color: ColorInput,
-};
+import FieldRegistry from '@modules/PageBuilder/fieldRegistry';
 
 const store = usePageBuilderStore();
 

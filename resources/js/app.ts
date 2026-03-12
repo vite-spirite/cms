@@ -8,6 +8,7 @@ import '../css/app.css';
 
 import { ZiggyVue } from 'ziggy-js';
 import BlockRegistry from '../../app/Modules/PageBuilder/Resources/js/blockRegistry';
+import FieldRegistry from '../../app/Modules/PageBuilder/Resources/js/fieldRegistry';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -40,14 +41,17 @@ createInertiaApp({
         return resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue'));
     },
     setup({ el, App, props, plugin }) {
+        BlockRegistry.all();
+
         const activeModules = (props.initialPage.props.activeModules as string[]) ?? [];
         const allExtensions = import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts']);
 
         const activeExtensions = Object.entries(allExtensions).filter(([path]) => activeModules.some((module) => path.includes(`/${module}/`)));
 
         import.meta.glob(['../../app/Core/*/Resources/js/blocks.ts', '../../app/Modules/*/Resources/js/blocks.ts'], { eager: true });
+        import.meta.glob(['../../app/Core/*/Resources/js/fields.ts', '../../app/Modules/*/Resources/js/fields.ts'], { eager: true });
 
-        console.log(BlockRegistry.all());
+        console.log(FieldRegistry.all());
 
         Promise.all(Object.values(activeExtensions).map(([, ext]) => ext())).then(() => {
             createApp({ render: () => h(App, props) })
