@@ -1,9 +1,16 @@
 <template>
-    <UModal class="w-full" description="choose in list" title="Select media:">
+    <UModal description="choose in list" title="Select media:">
         <template #body>
-            <UPageCard>
-                <img v-for="media in medias" :key="media.id" :src="media.url" @click="emits('close', media)" />
-            </UPageCard>
+            <div class="full container grid grid-cols-2 gap-2">
+                <img
+                    v-for="media in medias"
+                    :key="media.id"
+                    :src="media.url"
+                    :ui="{ body: 'sm:p-0 p-0' }"
+                    class="rounded-md"
+                    @click="emits('close', media)"
+                />
+            </div>
         </template>
     </UModal>
 </template>
