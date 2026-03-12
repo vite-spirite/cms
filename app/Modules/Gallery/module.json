@@ -1,0 +1,8 @@
+{
+    "name": "Gallery",
+    "display_name": "Media upload and manage",
+    "description": "Manage media used in PageBuilder",
+    "version": "1.0.0",
+    "type": "module",
+    "provider": "App\\Modules\\Gallery\\Providers\\GalleryServiceProvider"
+}

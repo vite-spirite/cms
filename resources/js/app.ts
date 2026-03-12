@@ -42,6 +42,7 @@ createInertiaApp({
     },
     setup({ el, App, props, plugin }) {
         BlockRegistry.all();
+        FieldRegistry.all();
 
         const activeModules = (props.initialPage.props.activeModules as string[]) ?? [];
         const allExtensions = import.meta.glob(['../../app/Core/*/Resources/js/extensions.ts', '../../app/Modules/*/Resources/js/extensions.ts']);
@@ -50,8 +51,6 @@ createInertiaApp({
 
         import.meta.glob(['../../app/Core/*/Resources/js/blocks.ts', '../../app/Modules/*/Resources/js/blocks.ts'], { eager: true });
         import.meta.glob(['../../app/Core/*/Resources/js/fields.ts', '../../app/Modules/*/Resources/js/fields.ts'], { eager: true });
-
-        console.log(FieldRegistry.all());
 
         Promise.all(Object.values(activeExtensions).map(([, ext]) => ext())).then(() => {
             createApp({ render: () => h(App, props) })
