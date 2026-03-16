@@ -2,6 +2,7 @@
 
 namespace App\Modules\PageBuilder\Requests;
 
+use App\Rules\ValidBlockContent;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePageRequest extends FormRequest
@@ -19,7 +20,7 @@ class CreatePageRequest extends FormRequest
             'status' => 'required|string|in:draft,published,archived',
             'og_balises' => 'array',
             'og_balises.*' => 'string|nullable',
-            'content' => 'array',
+            'content' => ['array', new ValidBlockContent],
         ];
     }
 }

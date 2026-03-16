@@ -7,7 +7,6 @@ use App\Core\Permissions\Service\PermissionRegistry;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use ReflectionClass;
 
 abstract class BaseModuleServiceProvider extends ServiceProvider
 {

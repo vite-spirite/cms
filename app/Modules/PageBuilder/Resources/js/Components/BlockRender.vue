@@ -83,7 +83,7 @@ const props = defineProps<{ block: any; editable: boolean }>();
 const resolvedComponent = computed(() => blockRegistry.resolve(props.block.type));
 const store = usePageBuilderStore();
 
-const isParentSelectable = computed(() => store.isBlockIsChildren(props.block));
+const isParentSelectable = computed(() => store.isChildBlock(props.block));
 </script>
 
 <style scoped>
