@@ -235,14 +235,28 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         }
     };
 
-    const isBlockIsChildren = (block: PageBlock) => {
+    const isChildBlock = (block: PageBlock) => {
         return !!findParentBlock(blocks.value, block);
+    };
+
+    const regenerateChildIds = (children: PageBlock[]): PageBlock[] => {
+        return children.map((child) => {
+            child.id = uuidv4();
+            if (child.data?.children) {
+                child.data.children = regenerateChildIds(child.data.children);
+            }
+            return child;
+        });
     };
 
     const duplicateBlock = (source: PageBlock) => {
         const parent = findParentBlock(blocks.value, source);
         const duplicated: PageBlock = JSON.parse(JSON.stringify(source));
         duplicated.id = uuidv4();
+
+        if (duplicated.data?.children) {
+            duplicated.data.children = regenerateChildIds(duplicated.data.children);
+        }
 
         if (parent && parent.data.children) {
             const sourceIndex = parent.data.children.findIndex((child: PageBlock) => child.id === source.id);
@@ -278,7 +292,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
         hoveredBlock,
         setHovered,
         selectParentBlock,
-        isBlockIsChildren,
+        isChildBlock,
         duplicateBlock,
     };
 });

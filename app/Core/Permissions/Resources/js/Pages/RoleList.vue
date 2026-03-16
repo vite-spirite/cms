@@ -44,8 +44,6 @@ const hasRoleCreate = computed(() => page.props.has_role_create as boolean);
 const hasRoleDelete = computed(() => page.props.has_role_delete as boolean);
 const hasRoleEdit = computed(() => page.props.has_role_edit as boolean);
 
-console.log(page.props);
-
 const data = ref<Role[]>(
     roles.value.map((role) => ({
         id: role.id,

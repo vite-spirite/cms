@@ -9,7 +9,6 @@ use App\Modules\Logger\Facades\CmsLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Nette\Utils\Random;
 
 class GalleryUploadFilesController
 {
@@ -26,10 +25,10 @@ class GalleryUploadFilesController
             $uploadedFiles = [];
 
             foreach ($files as $file) {
-                $name = Random::generate();
+                $name = Str::random();
                 $date = Carbon::now()->timestamp;
 
-                $path = Str::slug("{$date} {$name}") . '.' . $file->getClientOriginalExtension();
+                $path = Str::slug("{$date} {$name}") . '.' . $file->guessExtension();
 
                 $realPath = $file->storePubliclyAs('media', $path, 'public');
 

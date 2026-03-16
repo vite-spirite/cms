@@ -3,6 +3,7 @@
 namespace App\Core\Module\Controllers;
 
 use App\Core\Module\ModuleManager;
+use App\Jobs\RebuildFrontendJob;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -26,32 +27,24 @@ class ModuleToggleController
         }
 
         if ($moduleManager->loadModule($moduleName)) {
-            dispatch(function () {
-                exec('npm run build && npm run build:ssr');
-            })->afterResponse();
+            RebuildFrontendJob::dispatch();
 
             return Inertia::location(route('admin.home'));
-
-        } else {
-            $moduleManager->unloadModule($moduleName);
-
-            \Artisan::call('cache:clear');
-            \Artisan::call('route:clear');
-            \Artisan::call('view:clear');
-
-            if (config('octane.server')) {
-                \Artisan::call('octane:reload');
-            }
-
-            dispatch(function () {
-                exec('npm run build && npm run build:ssr');
-            })->afterResponse();
-
-            return Inertia::location(route('admin.home'));
-
         }
 
-        return Redirect::back()->with(['error' => ['title' => 'Manage module', 'description' => 'An error occured while deactivating this module']]);
+        $moduleManager->unloadModule($moduleName);
+
+        \Artisan::call('cache:clear');
+        \Artisan::call('route:clear');
+        \Artisan::call('view:clear');
+
+        if (config('octane.server')) {
+            \Artisan::call('octane:reload');
+        }
+
+        RebuildFrontendJob::dispatch();
+
+        return Inertia::location(route('admin.home'));
 
     }
 }
