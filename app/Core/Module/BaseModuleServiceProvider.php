@@ -61,7 +61,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
 
     protected function getModulePath(): string
     {
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
 
         return dirname($reflection->getFileName());
     }

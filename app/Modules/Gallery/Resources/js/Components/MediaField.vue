@@ -7,8 +7,8 @@
     </UFormField>
 </template>
 <script lang="ts" setup>
-import ListMediaModal from './ListMediaModal.vue';
 import type { Media } from '../types/media';
+import ListMediaModal from './ListMediaModal.vue';
 
 const model = defineModel({ required: true });
 const { label } = defineProps<{ label: string }>();

@@ -12,7 +12,7 @@ export function useGate() {
 
     function can(permission: string): boolean {
         if (!userPermissions.value) {
-            return true;
+            return false;
         }
 
         return userPermissions.value.owner || userPermissions.value.capabilities.includes(permission);
@@ -20,7 +20,7 @@ export function useGate() {
 
     function canAny(permissions: string[]): boolean {
         if (!userPermissions.value) {
-            return true;
+            return false;
         }
 
         if (userPermissions.value.owner) {

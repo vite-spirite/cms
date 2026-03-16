@@ -6,13 +6,16 @@ use App\Core\Module\Models\Module;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\ServiceProvider;
 
-class ModuleManager extends ServiceProvider
+class ModuleManager
 {
     protected array $modules = [];
 
     protected array $activeModules = [];
+
+    public function __construct(protected \Illuminate\Contracts\Foundation\Application $app)
+    {
+    }
 
     public function getActiveModules(): array
     {
@@ -142,16 +145,20 @@ class ModuleManager extends ServiceProvider
     {
         try {
             if (!\Schema::hasTable('modules')) {
-                logger()->info("Stored 'modules' table is not exists.");
+                logger()->info("Stored 'modules' table does not exist.");
             }
 
             $moduleList = Module::orderBy('id', 'ASC')->where('loaded', true)->get();
             foreach ($moduleList as $dbModule) {
-                $module = $this->modules[$dbModule->name];
+                $module = $this->modules[$dbModule->name] ?? null;
+                if (!$module) {
+                    Log::warning("Module '{$dbModule->name}' is stored but not found on disk.");
+                    continue;
+                }
                 $this->registerProvider($module);
             }
         } catch (\Exception $exception) {
-            logger()->info("Stored 'modules' table is not exists.", [$exception->getMessage()]);
+            logger()->info("Stored 'modules' table does not exist.", [$exception->getMessage()]);
         }
 
     }
