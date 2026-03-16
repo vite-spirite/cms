@@ -17,8 +17,8 @@
 
 <script lang="ts" setup>
 import { useApi } from '@modules/Module/Composables/useApi';
-import type { Media } from '../types/media';
 import { onMounted, ref } from 'vue';
+import type { Media } from '../types/media';
 
 const api = useApi();
 const medias = ref<Media[]>([]);

@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts" setup>
+import FieldRegistry from '@modules/PageBuilder/fieldRegistry';
 import { computed } from 'vue';
 
 import { usePageBuilderStore } from '../Stores/usePageBuilderStore';
-import FieldRegistry from '@modules/PageBuilder/fieldRegistry';
 
 const store = usePageBuilderStore();
 

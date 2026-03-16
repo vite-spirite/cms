@@ -7,6 +7,7 @@ use App\Core\Permissions\Service\PermissionRegistry;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use ReflectionClass;
 
 abstract class BaseModuleServiceProvider extends ServiceProvider
 {
@@ -60,7 +61,7 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
 
     protected function getModulePath(): string
     {
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
 
         return dirname($reflection->getFileName());
     }

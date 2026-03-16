@@ -28,13 +28,13 @@
 </template>
 
 <script lang="ts" setup>
+import { router, useForm, usePage } from '@inertiajs/vue3';
+import { format } from 'date-fns';
+import { computed } from 'vue';
 import Layout from '@/Layout/Dashboard.vue';
 import { route } from 'ziggy-js';
-import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import type { Media } from '../types/media';
-import { format } from 'date-fns';
 import DeleteModal from '../Components/DeleteModal.vue';
+import type { Media } from '../types/media';
 
 defineOptions({ layout: Layout });
 
