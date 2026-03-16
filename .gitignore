@@ -33,3 +33,6 @@ yarn-error.log
 auto-imports.d.ts
 components.d.ts
 tsconfig.modules.json
+
+docs/.vitepress/dist
+docs/.vitepress/cache
