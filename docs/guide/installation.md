@@ -62,4 +62,4 @@ Visit `http://localhost:8000` 🎉
 
 - [Quick Start Guide](/guide/quick-start)
 - [Architecture Overview](/guide/architecture)
-- [Creating Your First Module](/modules/creating-modules)
+- [Creating Your First Module](/modules/creating-module)
