@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
     title: 'CMS',
     description: 'CMS documentation',
+    base: '/cms/',
     themeConfig: {
         nav: [
             { text: 'Home', link: '/' },
