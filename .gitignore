@@ -36,3 +36,8 @@ tsconfig.modules.json
 
 docs/.vitepress/dist
 docs/.vitepress/cache
+
+
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php

@@ -31,29 +31,6 @@ class GalleryServiceProvider extends BaseModuleServiceProvider
                 'route' => 'gallery.list',
             ]
         ];
-    }class GalleryServiceProvider extends BaseModuleServiceProvider
-{
-
-    protected array $permissions = [
-        'gallery_upload' => [
-            'name' => 'upload gallery',
-            'description' => 'upload gallery',
-        ],
-        'gallery_delete' => [
-            'name' => 'delete gallery',
-            'description' => 'delete gallery',
-        ],
-    ];
-
-    public function getNavigations(): array
-    {
-        return [
-            [
-                'label' => "Gallery",
-                'icon' => 'i-lucide-images',
-                'route' => 'gallery.list',
-            ]
-        ];
     }
 
     public function boot(): void
