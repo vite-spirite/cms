@@ -26,10 +26,23 @@ export default defineConfig({
             ],
             '/modules': [
                 {
-                    text: 'Modules',
+                    text: 'Getting Started',
                     items: [
-                        { text: 'Modules', link: '/modules/' },
-                        { text: 'Creating module', link: '/modules/creating-module' },
+                        { text: 'Overview', link: '/modules/' },
+                        { text: 'Creating a module', link: '/modules/creating-module' },
+                        { text: 'Module communication', link: '/modules/module-communication' },
+                        { text: 'Extension points', link: '/modules/extension-points' },
+                        { text: 'Frontend conventions', link: '/modules/frontend' },
+                        { text: 'Creating a block', link: '/modules/creating-block' },
+                        { text: 'Permissions reference', link: '/modules/permissions-reference' },
+                    ],
+                },
+                {
+                    text: 'Core Modules',
+                    items: [
+                        { text: 'Auth', link: '/modules/core/auth' },
+                        { text: 'Permissions', link: '/modules/core/permissions' },
+                        { text: 'Navigation', link: '/modules/core/navigation' },
                     ],
                 },
             ],
@@ -37,8 +50,12 @@ export default defineConfig({
                 {
                     text: 'API',
                     items: [
-                        { text: 'API', link: '/api/' },
+                        { text: 'Overview', link: '/api/' },
                         { text: 'BaseModuleProvider', link: '/api/base-module-provider' },
+                        { text: 'ModuleHelper', link: '/api/module-helper' },
+                        { text: 'NavigationManager', link: '/api/navigation-manager' },
+                        { text: 'PermissionRegistry', link: '/api/permission-registry' },
+                        { text: 'Events', link: '/api/events' },
                     ],
                 },
             ],

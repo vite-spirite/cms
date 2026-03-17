@@ -38,7 +38,7 @@ Use `php artisan permissions:owner list` to see all users with owner status.
 
 ### 3. Access dashboard
 
-Visit [http://localhost:8000/login](http://localhost:8000/login)
+Visit [http://localhost:8000/admin/login](http://localhost:8000/admin/login)
 
 :::tip
 Default development server can be started with:
