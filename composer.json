@@ -17,6 +17,7 @@
         "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "*",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
@@ -84,6 +85,16 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "ide-helper": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models --nowrite",
+            "@php artisan ide-helper:meta"
+        ],
+        "ide-helper:write": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models --write",
+            "@php artisan ide-helper:meta"
         ]
     },
     "extra": {
