@@ -30,6 +30,7 @@ export default defineConfig({
                     items: [
                         { text: 'Overview', link: '/modules/' },
                         { text: 'Creating a module', link: '/modules/creating-module' },
+                        { text: 'Managing modules', link: '/modules/managing-modules' },
                         { text: 'Module communication', link: '/modules/module-communication' },
                         { text: 'Extension points', link: '/modules/extension-points' },
                         { text: 'Frontend conventions', link: '/modules/frontend' },
