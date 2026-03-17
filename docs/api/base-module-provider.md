@@ -1,24 +1,37 @@
 # BaseModuleServiceProvider
 
-The base class for all module service providers.
+Abstract base class that all module service providers must extend. Handles automatic loading of all module resources and
+provides hooks for permissions and navigation registration.
 
 ## Usage
 
 ```php
 <?php
 
-namespace App\Modules\YourModule\Providers;
+namespace App\Modules\Blog\Providers;
 
 use App\Core\Module\BaseModuleServiceProvider;
 
-class YourModuleServiceProvider extends BaseModuleServiceProvider
+class BlogServiceProvider extends BaseModuleServiceProvider
 {
-    protected string $name = 'YourModule';
-    
-    protected array $permissions = [];
-    
-    public function getNavigations() : array {
-        return [];
+    protected string $name = 'Blog';
+
+    protected array $permissions = [
+        'post_create' => [
+            'name'        => 'Create blog posts',
+            'description' => 'Ability to create new blog posts',
+        ],
+    ];
+
+    public function getNavigations(): array
+    {
+        return [
+            [
+                'label' => 'Blog',
+                'icon'  => 'i-lucide-book-open',
+                'route' => 'blog.index',
+            ],
+        ];
     }
 }
 ```
@@ -28,64 +41,111 @@ class YourModuleServiceProvider extends BaseModuleServiceProvider
 ### `$name`
 
 - **Type:** `string`
-- **Required:** Yes
-- **Description:** The display name of the module
+- **Default:** `CoreModule`
+- **Required:** yes
+
+The name of the module. Must match the `name` field in `module.json`. Used as the namespace for translations, the key
+for permission registration, and the identifier for `ModuleHelper::when()`.
+
+```php
+protected string $name = 'Blog';
+```
 
 ### `$permissions`
 
 - **Type:** `array`
-- **Description:** Permissions to register
+- **Default:** `[]`
 
-**Example:**
+Permissions to register with the `PermissionRegistry` when the module boots. Each entry is a permission key mapped to a
+`name` and `description`.
 
 ```php
 protected array $permissions = [
-    'module.action' => [
-        'name' => 'Permission name displayed in ACP',
-        'description' => 'Permission description displayed in ACP'
+    'post_create' => [
+        'name'        => 'Create blog posts',
+        'description' => 'Ability to create new blog posts',
     ],
 ];
 ```
 
-### `getNavigations`
+## Methods
+
+### `getNavigations()`
 
 - **Return type:** `array`
-- **Description:** Navigation items to register
+- **Default:** `[]`
 
-**Example:**
+Override this method to register navigation items in the sidebar. Items are registered after all providers are booted.
 
 ```php
 public function getNavigations(): array
 {
     return [
-        'label' => 'Dashboard',
-        'icon' => 'i-lucide-home',
-        'route' => 'route.name',
+        [
+            'label'    => 'Blog',
+            'icon'     => 'i-lucide-book-open',
+            'children' => [
+                ['label' => 'All posts',   'route' => 'blog.index'],
+                ['label' => 'Create post', 'route' => 'blog.create'],
+            ],
+        ],
     ];
 }
 ```
 
-## Auto-Loaded Resources
-
-The following resources are automatically loaded:
-
-- **Routes:** `Routes/web.php`, `Routes/api.php`
-- **Migrations:** `Migrations/*.php`
-- **Commands:** `Console/Commands/*.php`
-- **Config:** `Config/*.php`
-- **Views:** `Resources/views/*`
-- **Translations:** `Resources/lang/*`
-
-## Lifecycle Hooks
+See [NavigationManager](/api/navigation-manager) for the full list of available item properties.
 
 ### `register()`
 
-Called when the service provider is registered.
+Called before `boot()`. Use it to bind services into the container. Always call `parent::register()` first — it includes
+a guard to prevent double registration.
+
+```php
+public function register(): void
+{
+    parent::register();
+
+    $this->app->singleton(MyService::class, fn() => new MyService());
+}
+```
 
 ### `boot()`
 
-Called when the service provider is booted.
+Called after all providers are registered. Always call `parent::boot()` first — it triggers all auto-loading logic.
 
-### `booted()`
+```php
+public function boot(): void
+{
+    parent::boot();
 
-Called after all providers are booted (use for optional integrations).
+    // Your boot logic here
+}
+```
+
+## Auto-loaded resources
+
+All of the following are loaded automatically by `parent::boot()` with no manual registration needed.
+
+| Method                   | Path                   | Behavior                                                      |
+|--------------------------|------------------------|---------------------------------------------------------------|
+| `registerRoutes()`       | `Routes/web.php`       | Loaded with `web` middleware                                  |
+| `registerRoutes()`       | `Routes/api.php`       | Loaded with `web` + `auth`, prefixed `/api`, named `api.*`    |
+| `registerMigrations()`   | `Migrations/`          | Registered with `loadMigrationsFrom()`                        |
+| `registerCommands()`     | `Console/Commands/`    | Auto-discovered, console mode only                            |
+| `registerSchedule()`     | `Console/schedule.php` | Required after all providers are booted, console mode only    |
+| `registerConfig()`       | `Config/*.php`         | Merged with `mergeConfigFrom()`, key = filename               |
+| `registerTranslations()` | `Resources/lang/`      | Loaded with module name as namespace                          |
+| `registerNavigations()`  | —                      | Calls `getNavigations()` after all providers are booted       |
+| `registerPermissions()`  | —                      | Registers `$permissions` into `PermissionRegistry` after boot |
+
+## Double registration guard
+
+`BaseModuleServiceProvider` includes static guards on both `register()` and `boot()` to prevent a provider from being
+registered or booted more than once, even if the application attempts to load it multiple times.
+
+```php
+protected static array $registered = [];
+protected static array $booted = [];
+```
+
+This ensures that modules loaded both as core and from the database do not cause conflicts.
