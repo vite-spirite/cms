@@ -5,7 +5,6 @@ export default defineConfig({
     title: 'CMS',
     description: 'CMS documentation',
     themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Guide', link: '/guide/' },
@@ -20,7 +19,7 @@ export default defineConfig({
                     items: [
                         { text: 'Introduction', link: '/guide' },
                         { text: 'Installation', link: '/guide/installation' },
-                        { text: 'Quick start', link: '/guide/quick-start' },
+                        { text: 'Quick Start', link: '/guide/quick-start' },
                         { text: 'Architecture', link: '/guide/architecture' },
                     ],
                 },
@@ -45,6 +44,14 @@ export default defineConfig({
                         { text: 'Auth', link: '/modules/core/auth' },
                         { text: 'Permissions', link: '/modules/core/permissions' },
                         { text: 'Navigation', link: '/modules/core/navigation' },
+                    ],
+                },
+                {
+                    text: 'Optional Modules',
+                    items: [
+                        { text: 'PageBuilder', link: '/modules/optional/page-builder' },
+                        { text: 'Logger', link: '/modules/optional/logger' },
+                        { text: 'Gallery', link: '/modules/optional/gallery' },
                     ],
                 },
             ],
