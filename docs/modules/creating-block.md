@@ -86,6 +86,118 @@ class QuoteBlock extends AbstractBlock
 | `required` | `bool`   | no       | Throws if value is empty during validation |
 | `options`  | `array`  | no       | Only for `select` type                     |
 
+## The `data()` method
+
+The `data()` method allows a block to enrich its data with **dynamic PHP-side content** at render time. It is called by
+`toRenderArray()` when the BlockRegistry renders a page for the frontend — it is **not** called during serialization (
+storage).
+
+This is the right place to fetch related models, resolve a slug to its content, or inject any server-side data that
+cannot be stored in the block's schema fields.
+
+```php
+public function data(): array
+{
+    return [];
+}
+```
+
+By default it returns an empty array. Override it to merge additional data into the block's props before they are sent
+to the Vue component.
+
+### Example: injecting article content from a slug
+
+```php
+<?php
+
+namespace App\Modules\Blog\Blocks;
+
+use App\Modules\Blog\Models\Post;
+use App\Modules\PageBuilder\Contracts\AbstractBlock;
+
+class ArticleBlock extends AbstractBlock
+{
+    public static function type(): string
+    {
+        return 'article';
+    }
+
+    public static function label(): string
+    {
+        return 'Article';
+    }
+
+    public static function icon(): string
+    {
+        return 'i-lucide-newspaper';
+    }
+
+    public static function schema(): array
+    {
+        return [
+            'slug' => [
+                'label'    => 'Article slug',
+                'type'     => 'text',
+                'default'  => '',
+                'required' => true,
+            ],
+        ];
+    }
+
+    public function data(): array
+    {
+        $post = Post::where('slug', $this->get('slug'))->first();
+
+        if (!$post) {
+            return ['post' => null];
+        }
+
+        return [
+            'post' => [
+                'title'   => $post->title,
+                'content' => $post->content,
+                'author'  => $post->author->name,
+            ],
+        ];
+    }
+}
+```
+
+The Vue component then receives both the schema fields (`slug`) **and** the dynamic data (`post`) as props:
+
+```vue
+
+<template>
+    <div v-if="post">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.author }}</p>
+        <div v-html="post.content"/>
+    </div>
+    <div v-else>Article not found.</div>
+</template>
+
+<script lang="ts" setup>
+    defineProps<{
+        id: string
+        slug: string
+        editable: boolean
+        selected: boolean
+        post: { title: string; content: string; author: string } | null
+    }>()
+</script>
+```
+
+::: warning
+`data()` is only called during **rendering** (`BlockRegistry::render()`), not during serialization (
+`BlockRegistry::serialize()`). The dynamic data is never stored in the database — only the schema fields are persisted.
+This means `data()` runs on every page load.
+:::
+
+::: tip
+Use `$this->get('key', $default)` to safely read schema field values inside `data()`. This is equivalent to
+`$this->data['key'] ?? $default`.
+:::
+
 ## Step 2: Register the PHP class
 
 Register your block in your module's service provider. The registration must happen after all providers are booted to
@@ -229,6 +341,7 @@ FieldRegistry.register('my-field', () => import('./Components/Fields/MyField.vue
 ## Full checklist
 
 - PHP class extending `AbstractBlock` with `type()`, `label()`, `icon()`, `schema()`
+- Override `data()` if the block needs dynamic server-side data at render time
 - Block registered in service provider inside `ModuleHelper::when('PageBuilder')`
 - Vue component in `Resources/js/Blocks/`
 - Block registered in `Resources/js/blocks.ts`
