@@ -26,6 +26,14 @@ cannot be disabled.
 | PUT    | `/admin/users/edit`          | `admin.users.edit.request`   | `auth`, `can:user_edit`   |
 | DELETE | `/admin/users/delete/{user}` | `admin.users.delete`         | `auth`, `can:user_delete` |
 
+### API
+
+| Method | URI          | Name             | Middleware |
+|--------|--------------|------------------|------------|
+| GET    | `/api/users` | `api.users.list` | `auth`     |
+
+Used internally by the `AssignRole` component to populate the user list when assigning users to a role.
+
 ## Permissions
 
 | Key           | Display Name    | Description                      |
@@ -144,19 +152,6 @@ php artisan auth:create-user "John Doe" john@example.com
 # Or pass the password directly (not recommended in production)
 php artisan auth:create-user "John Doe" john@example.com --password=secret123
 ```
-
-## Shared Inertia Data
-
-The Auth module shares the full user list via Inertia as an **optional** prop:
-
-```php
-Inertia::share([
-    'users' => Inertia::optional(fn() => User::all()),
-]);
-```
-
-This means `users` is only loaded when explicitly requested using `router.reload({ only: ['users'] })`. It is used
-internally by the `AssignRole` component from the Permissions module.
 
 ## Navigation
 
