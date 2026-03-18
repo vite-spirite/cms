@@ -9,25 +9,25 @@
 </template>
 
 <script lang="ts" setup>
-import { router, usePage } from '@inertiajs/vue3';
+import { useApi } from '@modules/Module/Composables/useApi';
 import { useGate } from '@modules/Module/Composables/useGate';
 import type { TableColumn } from '@nuxt/ui';
-import { computed, h, resolveComponent } from 'vue';
+import { computed, h, onMounted, ref, resolveComponent } from 'vue';
 import type { User } from '@/types';
 
 const UCheckbox = resolveComponent('UCheckbox');
-const page = usePage();
 const gate = useGate();
 const allow = gate.can('role_assign');
 
-const users = computed<User[]>(() => (page.props.users as User[]) ?? []);
+const users = ref<User[]>([]);
+const api = useApi();
 
 const props = defineProps<{ members?: User[] }>();
 const extensionValues = defineModel<Record<string, unknown>>({ required: true });
 extensionValues.value.users = props.members ? (props.members.map((v) => v.id) as number[]) : ([] as number[]);
 
-router.reload({
-    only: ['users'],
+onMounted(async () => {
+    users.value = await api.get<User[]>('/api/users');
 });
 
 const data = computed(() =>
