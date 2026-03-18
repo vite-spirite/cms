@@ -34,7 +34,7 @@
                 <Sortable
                     :key="store.dragVersion"
                     :list="store.blocks"
-                    :options="{ group: 'page_builder' }"
+                    :options="{ group: 'page_builder', handle: '.handle', animation: 150 }"
                     itemKey="id"
                     @add="(e: SortableEvent) => store.onDragAdd(store.blocks, e.newIndex ?? 0)"
                     @end="
@@ -49,7 +49,10 @@
                     @start="(e: SortableEvent) => store.onDragStart(store.blocks[e.oldIndex ?? 0])"
                 >
                     <template #item="{ element }">
-                        <BlockRender :block="element" :editable="true" />
+                        <div class="relative min-h-14">
+                            <BlockRender :block="element" :editable="true" />
+                            <BlockToolbar :block="element" />
+                        </div>
                     </template>
                 </Sortable>
             </div>
@@ -75,6 +78,7 @@
 
 <script lang="ts" setup>
 import { useForm, usePage } from '@inertiajs/vue3';
+import BlockToolbar from '@modules/PageBuilder/Components/BlockToolbar.vue';
 import type { SortableEvent } from 'sortablejs';
 import { Sortable } from 'sortablejs-vue3';
 import { computed, onUnmounted } from 'vue';
