@@ -1,4 +1,3 @@
-<!-- BlockSettings.vue -->
 <template>
     <div v-if="store.selectedBlock" class="flex flex-col items-start justify-start space-y-2">
         <component

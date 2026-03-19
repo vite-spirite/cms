@@ -22,6 +22,10 @@ const fields: { type: string; component: AsyncComponentLoader }[] = [
         type: 'color',
         component: () => import('./Components/Fields/ColorInput.vue'),
     },
+    {
+        type: 'bool',
+        component: () => import('./Components/Fields/BooleanField.vue'),
+    },
 ];
 
 FieldRegistry.registerMany(fields);

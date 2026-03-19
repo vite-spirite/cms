@@ -6,3 +6,7 @@ BlockRegistry.register('column', () => import('./Blocks/ColumnBlock.vue'));
 BlockRegistry.register('row', () => import('./Blocks/RowBlock.vue'));
 
 BlockRegistry.register('page', () => import('./Blocks/PageBlock.vue'));
+
+BlockRegistry.register('spacer', () => import('./Blocks/SpacerBlock.vue'));
+
+BlockRegistry.register('separator', () => import('./Blocks/SeparatorBlock.vue'));

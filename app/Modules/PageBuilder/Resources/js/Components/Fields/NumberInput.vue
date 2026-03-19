@@ -6,5 +6,5 @@
 
 <script lang="ts" setup>
 const { label } = defineProps<{ label: string }>();
-const model = defineModel({ required: true });
+const model = defineModel({ default: 0 });
 </script>

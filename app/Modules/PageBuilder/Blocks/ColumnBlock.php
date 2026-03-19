@@ -22,10 +22,32 @@ class ColumnBlock extends \App\Modules\PageBuilder\Contracts\AbstractBlock
     public static function schema(): array
     {
         return [
-            'space_y' => [
-                'label' => 'Space Y:',
+            'gap' => [
+                'label' => 'Spacing:',
                 'type' => 'int',
                 'default' => 2,
+            ],
+            'width' => [
+                'label' => 'Width:',
+                'type' => 'select',
+                'options' => [
+                    'auto',
+                    '1/2',
+                    '1/3',
+                    '2/3',
+                    '1/4',
+                    '3/4',
+                    'full'
+                ]
+            ],
+            'align_items' => [
+                'label' => 'Alignment:',
+                'type' => 'select',
+                'options' => [
+                    'start',
+                    'center',
+                    'end'
+                ]
             ],
             'children' => [
                 'label' => 'Children',
