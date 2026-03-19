@@ -10,3 +10,5 @@ BlockRegistry.register('page', () => import('./Blocks/PageBlock.vue'));
 BlockRegistry.register('spacer', () => import('./Blocks/SpacerBlock.vue'));
 
 BlockRegistry.register('separator', () => import('./Blocks/SeparatorBlock.vue'));
+
+BlockRegistry.register('button', () => import('./Blocks/ButtonBlock.vue'));
